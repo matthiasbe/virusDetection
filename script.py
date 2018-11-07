@@ -10,23 +10,9 @@ import vis
 ftcount = 531
 
 datafile = 'Dataset/dataset.train'
-data = list(csv.reader(open(datafile), delimiter=' '))
-train = np.zeros((len(data),ftcount))
 
-# converts "15:1" to row[15] = 1
-idx = 0
-for row in data:
-    current = train[idx]
-    current[ftcount-1] = int(row[0])
-    for elt in row[1:]:
-        split = elt.split(':')
-        if (len(split) == 2):
-            ftnum = int(split[0])
-            if (ftnum <= len(current)-1):
-                current[ftnum] = int(split[1])
-    idx = idx + 1
+train = preprocessing.get_data(datafile, ftcount)
 
-print(train.shape)
 mask = np.zeros_like(train)
 mask[:] = 1
 empty_columns = train.any(axis=0)
