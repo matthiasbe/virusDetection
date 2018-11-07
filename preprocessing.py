@@ -16,3 +16,11 @@ def get_data(datafile, ftcount):
 	                current[ftnum] = int(split[1])
 	    idx = idx + 1
 	return train
+
+def mask_unused_features(data):
+	mask = np.zeros_like(data)
+	mask[:] = 1
+	empty_columns = data.any(axis=0)
+	mask[:, empty_columns] = 0
+	data_masked = np.ma.masked_array(data, mask)
+	return data_masked

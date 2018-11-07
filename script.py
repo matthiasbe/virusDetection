@@ -13,12 +13,7 @@ datafile = 'Dataset/dataset.train'
 
 train = preprocessing.get_data(datafile, ftcount)
 
-mask = np.zeros_like(train)
-mask[:] = 1
-empty_columns = train.any(axis=0)
-mask[:, empty_columns] = 0
-trainm = np.ma.masked_array(train, mask)
-trainm
+trainm = preprocessing.mask_unused_features(train)
 #train_masked = train[mask]
 #print(train_masked.shape)
 from sklearn.linear_model import LogisticRegression
