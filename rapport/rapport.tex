@@ -1,0 +1,95 @@
+\documentclass[11pt,a4paper]{article}
+
+
+\setlength{\topmargin}{-55pt}%
+\setlength{\oddsidemargin}{-20pt}%
+\setlength{\textwidth}{490pt}%
+\setlength{\textheight}{700pt}%
+\setlength{\headsep}{20pt}%
+\setlength{\headheight}{14pt}
+
+\usepackage[utf8]{inputenc} % accents 8 bits dans le fichier
+\usepackage[T1]{fontenc}      % accents codés dans la fonte
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{siunitx}
+\usepackage{hepnames}
+\usepackage{tikz-feynman}
+\usepackage[version=4]{mhchem} 
+\usepackage[mode=buildnew]{standalone}
+\usepackage{booktabs}
+\usepackage{color, colortbl}
+\usepackage{appendix}
+\usepackage{pgfplots}
+\usepackage[hidelinks]{hyperref}
+
+\addto\captionsfrench{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Table des matières}
+}
+
+\DecimalMathComma
+
+\lhead{Détection de virus informatique}      %en-tête
+\chead{}%
+\rhead{}%
+\lfoot{}%\tiny{Pierre GRANGER}}%
+\cfoot{}%
+\rfoot{\thepage}%
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\pagestyle{fancy}
+
+\DeclareSIUnit\year{yr}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand{\graphtikz}[2]{
+\begin{figure}[h]
+	\begin{center}
+		\shorthandoff{:!}
+		\includestandalone[#1]{#2}
+		\shorthandon{:!}
+	\end{center}
+\end{figure}
+}
+
+\definecolor{green}{rgb}{0.2,0.8,0.2}
+
+\begin{document}
+\begin{center}
+
+	{\LARGE\centering Classifications de programmes malicieux et non-malicieux\\ à partir de propriétés binaires}\\[1cm]
+
+	{ Matthias \bsc{Beupère}, Pierre \bsc{Granger}}\\[0.5cm]
+	{Rapport DA - CHPS - \today}
+\end{center}
+
+\tableofcontents
+
+\section{Présentation du jeu de données}
+	Nos données proviennent de la base de données UCI\cite{UCI}.
+	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}.
+
+\section{Pré-traitement des données}
+
+\section{Différents algo}
+	\subsection{SVM}
+	\subsection{SVC}
+	\subsection{Classification avec kmeans}
+
+\section{Analyse des résultats}
+
+\section{Pour aller plus loin...}
+
+\section{Conclusion}
+	On mérite au moins 21/20.
+
+\bibliographystyle{unsrt}
+\bibliography{synopsis.bib}
+
+%\input{appendix}
+
+\end{document}
