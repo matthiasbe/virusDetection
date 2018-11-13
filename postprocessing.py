@@ -13,7 +13,10 @@ def correct_prediction(prediction, expected):
     n = np.sum(prediction == expected)
     return float(n)/len(prediction)
 
-def evaluate(prediction, expected):
-	print("False positive : {0:.2f}".format(false_positive(prediction, expected)))
-	print("Missed positive : {0:.2f}".format(missed_positive(prediction, expected)))
-	print("Correct prediction : {0:.2f}".format(correct_prediction(prediction, expected)))
+def evaluate(prediction, expected, printing=False):
+	if(printing):
+		print("False positive : {0:.2f}".format(false_positive(prediction, expected)))
+		print("Missed positive : {0:.2f}".format(missed_positive(prediction, expected)))
+		print("Correct prediction : {0:.2f}".format(correct_prediction(prediction, expected)))
+
+	return (false_positive(prediction, expected), missed_positive(prediction, expected), correct_prediction(prediction, expected))
