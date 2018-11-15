@@ -75,59 +75,68 @@
 	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de carctéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les carctéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
 
 \section{Pré-traitement des données}
-	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune.
-
-	\begin{center}
-	\begin{figure}
-	\begin{tikzpicture}
-	\begin{axis}[
-	width=\linewidth,
-	height=6cm,
-	ybar stacked,
-	ybar interval=1,
-	ybar legend,
-	xmin=50,xmax=250,
-	ymin=0, ymax=300,
-	% xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
-	x tick label style= {rotate=90,anchor=east},
-	xlabel={Nombre de caractéristiques},
-	ylabel={Nombre de programmes}
-	],
-	\addplot+[ybar] table[x index= 0, y index=1] {data/hist_tab.dat};
-	\addplot+[ybar] table[x index= 0, y index=2] {data/hist_tab.dat};
-	% \addplot[sharp plot,mark=square*,black]
-	% coordinates
-	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
-	\end{axis}
-	\end{tikzpicture}
-	\caption{VIRUS\label{hist_features}}
-	\end{figure}
-	\end{center}
+	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune. On peut en outre remarquer que la quasi totalité des virus possèdent un nombre de caractéristique situé entre 80 et 110 tandis qu'il existe des programmes bénins avec plus ou moins de caractéristiques. Cette observation pourra nous mener à tenter de restreindre certaines analyses futures aux programmes possédant entre 80 et 110 caractéristiques en supposant que les programmes bénins ne respectant pas ce critère peuvent être considérés comme des valeurs extrèmes.
+	On peut en outre observer sur l'histogramme représenté en figure \ref{hist_individuals} que la majorité des caractéristiques ne sont possédées que par quelques dizaines de programmes. On observe néanmoins qu'il existe un nombre non négligeable de caractéristiques partagées par un grand nombre de programmes. On pourra se proposer par la suite de ne pas considérer les caractéristiques correspondantes car elles sont moins significatives.
 
 
 	\begin{center}
-	\begin{figure}
-	\begin{tikzpicture}
-	\begin{axis}[
-	width=\linewidth,
-	height=6cm,
-	xmin=50,xmax=250,
-	ymin=0, ymax=300,
-	ybar interval,
-	xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
-	x tick label style= {rotate=90,anchor=east},
-	xlabel={Nombre de caractéristiques},
-	ylabel={Nombre de programmes}
-	],
-	\addplot+[hist={bins=20, data max=250,data min=50}]
-	table[y index=0] {data/hist_features.dat};
-	% \addplot[sharp plot,mark=square*,black]
-	% coordinates
-	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Histogramme du nombre de caractéristiques possédé par chaque programme\label{hist_features}}
-	\end{figure}
+		\begin{figure}
+			\begin{tikzpicture}
+			\begin{axis}[
+			width=\linewidth,
+			height=4cm,
+			xmin=50,xmax=250,
+			ymin=0, ymax=300,
+			ybar interval=1,
+			ybar legend,
+			xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+			x tick label style= {rotate=90,anchor=east},
+			xlabel={Nombre de caractéristiques},
+			ylabel={Nombre de programmes}
+			],
+			\addplot+[hist={bins=20, data max=250,data min=50}] table[y index=0] {data/hist_features_ok.dat};
+			\legend{Programmes bénins}
+			\end{axis}
+			\end{tikzpicture}
+			\begin{tikzpicture}
+			\begin{axis}[
+			width=\linewidth,
+			height=4cm,
+			ybar interval=1,
+			ybar legend,
+			xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+			x tick label style= {rotate=90,anchor=east},
+			xmin=50,xmax=250,
+			ymin=0, ymax=300,
+			xlabel={Nombre de caractéristiques},
+			ylabel={Nombre de programmes}
+			],
+			\addplot+[hist={bins=20, data max=250,data min=50}, fill=red!50!white, draw=red] table[y index=0] {data/hist_features_virus.dat};
+			\legend{Programmes malicieux}
+			\end{axis}
+			\end{tikzpicture}
+
+			\begin{tikzpicture}
+			\begin{axis}[
+			width=\linewidth,
+			height=4cm,
+			xmin=50,xmax=250,
+			ymin=0, ymax=300,
+			ybar interval=1,
+			ybar legend,
+			xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+			x tick label style= {rotate=90,anchor=east},
+			xlabel={Nombre de caractéristiques},
+			ylabel={Nombre de programmes}
+			],
+			\addplot+[hist={bins=20, data max=250,data min=50}, fill=black!50!white, draw=black]
+			table[y index=0] {data/hist_features.dat};
+			\legend{Ensemble des programmes}
+			\end{axis}
+			\end{tikzpicture}
+
+			\caption{Histogramme du nombre de caractéristiques possédé par chaque programme\label{hist_features}}
+		\end{figure}
 	\end{center}
 
 	\begin{center}
@@ -168,7 +177,10 @@
 		La deuxième technique consiste à diviser le jeu de données en $n$ parties égales. On itère sur chaque partie de la façon suivant: les $n-1$ autres parties servent à entrainer le modèle et la partie courante est utilisée pour le valider. 
 
 \section{Différents algo}
-	\subsection{LogReg}
+	\subsection{Régression logistique}
+		La régression logistique permet facilement d'effectuer une régression binomiale sur des caractéristiques binaires afin d'obtenir une classification binaire d'où sa mise en oeuvre dans le problème qui nous occupe.
+
+		La régression logistique permet d'effectuer une pénalisation de type l1 ou l2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression.
 		\begin{center}
 			\begin{figure}
 				\begin{tikzpicture}

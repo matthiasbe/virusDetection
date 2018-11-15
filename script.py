@@ -13,10 +13,11 @@ ftcount = 531
 datafile = 'Dataset/dataset.train'
 
 train = preprocessing.get_data(datafile, ftcount)
-
+# train = train[train.sum(axis=1) < 110]
+train = train.T[train.sum(axis=0) < 240].T
 trainm = preprocessing.mask_unused_features(train)
-#trainm = trainm[trainm.sum(axis=1) < 110]
-N = 100
+
+N = 500
 Npoints = 50
 # evaluation_tot = np.zeros((Npoints,4))
 # evaluation_full = np.zeros((Npoints, N));
@@ -44,18 +45,18 @@ for n in range(N):
 # plt.ylabel("Evaluation proportions")
 # plt.legend()
 # plt.title("{} runs for LogReg".format(N))
-means = []
-stds = []
-for i in range(Npoints):
-	means.append(np.mean(evaluation_full[i,:]));
-	stds.append(np.std(evaluation_full[i,:]));
-plt.errorbar(np.linspace(0.1, 1, Npoints), means, fmt='.', yerr=stds)
-_, (ax1, ax2) = plt.subplots(1, 2)
-ax1.plot(np.linspace(0.1, 1, Npoints, endpoint=False),means)
-ax1.set_title("Means")
-ax2.plot(np.linspace(0.1, 1, Npoints, endpoint=False),stds)
-ax2.set_title("Stds")
-plt.show()
+# means = []
+# stds = []
+# for i in range(Npoints):
+# 	means.append(np.mean(evaluation_full[i,:]));
+# 	stds.append(np.std(evaluation_full[i,:]));
+# plt.errorbar(np.linspace(0.1, 1, Npoints), means, fmt='.', yerr=stds)
+# _, (ax1, ax2) = plt.subplots(1, 2)
+# ax1.plot(np.linspace(0.1, 1, Npoints, endpoint=False),means)
+# ax1.set_title("Means")
+# ax2.plot(np.linspace(0.1, 1, Npoints, endpoint=False),stds)
+# ax2.set_title("Stds")
+# plt.show()
 #clf2 = svm.SVC(gamma=0.001, C=100).fit(trainm_train[:,:-1], trainm_train[:,-1])
 #print(clf.score(trainm_test[:,:-1], trainm_test[:,-1]))
 #print(clf2.score(trainm_test[:,:-1], trainm_test[:,-1]))
