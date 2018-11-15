@@ -62,7 +62,7 @@
 \begin{document}
 \begin{center}
 
-	{\LARGE\centering Classifications de programmes malicieux et non-malicieux\\ à partir de propriétés binaires}\\[1cm]
+	{\LARGE\centering Classification de programmes malicieux et non-malicieux\\ à partir de propriétés binaires}\\[1cm]
 
 	{ Matthias \bsc{Beaupère}, Pierre \bsc{Granger}}\\[0.5cm]
 	{Rapport DA - CHPS - \today}
@@ -71,16 +71,18 @@
 \tableofcontents
 
 \section{Présentation du jeu de données}
-	Nos données proviennent de la base de données UCI\cite{UCI}.
-	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
+	Nos données proviennent de la base de données UCI \cite{UCI}.
+	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme. Pour chacune d'entre elles, une efficacité est calculée et seules les caractéristiques les plus efficaces sont conservées.
 
 \section{Objectifs}
-	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
+	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Pour un même score, on s'attachera à optimiser le nombre de faux-négatifs car c'est le cas le plus préoccupant dans le cadre de la détection de virus. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
 
 \section{Pré-traitement des données}
-	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune. On peut en outre remarquer que la quasi totalité des virus possèdent un nombre de caractéristique situé entre 80 et 110 tandis qu'il existe des programmes bénins avec plus ou moins de caractéristiques. Cette observation pourra nous mener à tenter de restreindre certaines analyses futures aux programmes possédant entre 80 et 110 caractéristiques en supposant que les programmes bénins ne respectant pas ce critère peuvent être considérés comme des valeurs extrèmes.
-	On peut en outre observer sur l'histogramme représenté en figure \ref{hist_individuals} que la majorité des caractéristiques ne sont possédées que par quelques dizaines de programmes. On observe néanmoins qu'il existe un nombre non négligeable de caractéristiques partagées par un grand nombre de programmes. On pourra se proposer par la suite de ne pas considérer les caractéristiques correspondantes car elles sont moins significatives.
+	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédées par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possède une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune.
 
+	On peut en outre remarquer que la quasi totalité des virus possède un nombre de caractéristiques situé entre 80 et 110 tandis qu'il existe des programmes bénins avec plus ou moins de caractéristiques. Cette observation pourra nous mener à tenter de restreindre certaines analyses futures aux programmes possédant entre 80 et 110 caractéristiques en supposant que les programmes bénins ne respectant pas ce critère peuvent être considérés comme des valeurs extrèmes.
+
+	On peut par ailleurs observer sur l'histogramme représenté en figure \ref{hist_individuals} que la majorité des caractéristiques ne sont possédées que par quelques dizaines de programmes. On observe néanmoins qu'il existe un nombre non négligeable de caractéristiques partagées par un grand nombre de programmes. On pourra se proposer par la suite de ne pas considérer les caractéristiques correspondantes car elles sont moins significatives.
 
 	\begin{center}
 		\begin{figure}
@@ -138,7 +140,7 @@
 			\end{axis}
 			\end{tikzpicture}
 
-			\caption{Histogramme du nombre de caractéristiques possédé par chaque programme\label{hist_features}}
+			\caption{Histogramme du nombre de caractéristiques possédées par chaque programme\label{hist_features}}
 		\end{figure}
 	\end{center}
 
@@ -163,7 +165,7 @@
 	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
 	\end{axis}
 	\end{tikzpicture}
-	\caption{Histogramme du nombre de programme possédant chaque caractéristique\label{hist_individuals}}
+	\caption{Histogramme du nombre de programmes possédant chaque caractéristique\label{hist_individuals}}
 	\end{figure}
 	\end{center}
 
@@ -173,21 +175,21 @@
 
 	\subsection{Data-splitting}		
 		La première technique de validation utilisée est la technique de data-splitting. On divise aléatoirement le jeu de données en deux. La première partie sert à entrainer le modèle tandis que la seconde est utilisée pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
-		Cette technique produit des résultats très différents suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera souvent un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
+		Cette technique produit des résultats très différents suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera systématiquement un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
 
 	\subsection{Cross-validation}
 
 		La deuxième technique consiste à diviser le jeu de données en $n$ parties égales. On itère sur chaque partie de la façon suivante: les $n-1$ autres parties servent à entrainer le modèle et la partie courante est utilisée pour le valider. 
 
-\section{Différents algo}
+\section{Différents algorithmes}
 	\subsection{Régression logistique}
-		La régression logistique permet facilement d'effectuer une régression binomiale sur des caractéristiques binaires afin d'obtenir une classification binaire d'où sa mise en oeuvre dans le problème qui nous occupe.
+		La régression logistique permet facilement d'effectuer une régression binomiale sur des caractéristiques binaires afin d'obtenir une classification binaire, d'où sa mise en oeuvre dans le problème qui nous occupe.
 
-		La régression logistique permet d'effectuer une pénalisation de type L1 ou L2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression. Cette pénalisation peut se parametrer avec Scikit-Learn au travers d'un paramètre $C$ qui est l'inverse de la constante de régularisation. Ainsi on augmente la pénalisation lorsque l'on diminue $C$.
+		La régression logistique permet d'effectuer une pénalisation de type L1 ou L2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression. Cette pénalisation peut s'ajuster avec Scikit-Learn au travers d'un paramètre $C$ qui est l'inverse de la constante de régularisation. Ainsi on augmente la pénalisation lorsque l'on diminue $C$.
 
 		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Le taux de faux-négatifs commence alors à très légèrement augmenter. Il semble qu'aucune valeur spécifique permette d'optimiser le nombre de faux-négatifs par rapport aux faux-positifs. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
 
-		Dans un second temps, on peut tenter d'optimiser la proportion à utiliser entre les données d'entrainement de test afin d'obtenir les meilleurs résultats. On peut observer sur la figure \ref{logreg_meanstd} les tracés de la valeur moyenne et de l'écart-type du score obtenus après 500 répétitions aléatoires. Le score moyen augmente en suivant une loi de puissance de paramètre $0.09$ lorsque la quantité de données d'entrainement augmente. Néanmoins l'écart-type commence à exploser lorsque la proportion des données d'entrainement dépasse $0.8$ ce qui est attendu car alors la quantité d'exemples de test devient très faible. Le choix le plus judicieux du paramètre de proportion semble alors être $0.8$ ce qui permet d'atteindre une précision moyenne de $\SI{87}{\percent}$.
+		Dans un second temps, on peut tenter d'optimiser la proportion à utiliser entre les données d'entrainement et de test afin d'obtenir les meilleurs résultats. On peut observer sur la figure \ref{logreg_meanstd} les tracés de la valeur moyenne et de l'écart-type du score obtenus après 500 répétitions aléatoires. Le score moyen augmente en suivant une loi de puissance de paramètre $0.09$ lorsque la quantité de données d'entrainement augmente. Néanmoins l'écart-type commence à augmenter fortement lorsque la proportion des données d'entrainement dépasse $0.8$ ce qui est attendu car alors la quantité d'exemples de test devient très faible. Le choix le plus judicieux du paramètre de proportion semble alors être $0.8$ ce qui permet d'atteindre une précision moyenne de $\SI{87}{\percent}$.
 
 		Lorsque l'on tente de restreindre le nombre de programmes à étudier en ne sélectionnant que ceux avec un nombre de caractéristiques entre 80 et 110, la précision moyenne chute à $\SI{84}{\percent}$. Il est propable que cette restriction ne soit pas judicieuse car on ne possède déjà qu'une population de très petite taille devant le nombre de caractéristiques. Néanmoins lorsque l'on élimine toutes les caractéristiques faiblement représentatives c'est à dire celles possédées par plus de 240 individus, on obtient des résultats tout aussi bon qu'en les laissant. Ainsi, il peut être judicieux de ne pas tenir compte de ces caractéristiques.
 
@@ -245,34 +247,12 @@
 			\end{figure}
 		\end{center}
 
-
-	\subsection{SVM}
-
-		% \begin{figure}[h]
-		% 	\centering
-		% 	\begin{tikzpicture}
-		% 		\begin{axis}[
-		% 			xlabel={$Q_{\beta\beta}$ (\si{MeV})},
-		% 			ylabel style={align=center},
-		% 			ylabel={Events not depositing energy \\ in the considered medium (\si{\percent})},
-		% 			legend pos=north east,
-		% 			legend entries={fibers, buffer}]
-		% 			\addplot table [x=Qbb, y=percent, only marks] {increase.txt};
-		% 			\addplot table [x=Qbb, y=percent2, only marks] {increase.txt};
-		% 		\end{axis}
-		% 	\end{tikzpicture}
-		% 	\caption{Proportions of events not depositing energy in the fibers as a function of $Q_{\beta\beta}$ of the considered isotope. \label{figure:en_vs_qbb}}
-		% \end{figure}
-
-	\subsection{SVC}
-	\subsection{Classification avec kmeans}
-
 	\subsection{Arbre de décision}
 
 		\subsubsection{Arbre simple}
 			Comme premier classificateur on utilise un unique arbre de décision. On compare les deux méthodes de validation : tout d'abord le data-splitting et ensuite la validation croisée. Dans chaque cas on observe l'impact de la proportion des données d'entrainement sur la précision et la robustesse du modèle.
 
-			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour mille rejeu du data-splitting. Chaque abscisse donne un proportion des données de test. On observe un minimum d'écart-type à l'abscisse $175$. Cela montre que le modèle le plus robuste correspond à des données de test représentant environ 45\% de la population.
+			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour 1000 répétitions du data-splitting. Chaque abscisse correspond à une proportion des données de test. On observe un minimum d'écart-type pour $175$ individus au sein du groupe de test. Cela montre que le modèle le plus robuste correspond à des données de test représentant environ 45\% de la population.
 
 			\begin{figure}
 				\begin{tikzpicture}
@@ -299,8 +279,8 @@
 				\label{data-splitting-dt}
 			\end{figure}
 
-			La figure \ref{cv_dt} représente précision du modèle avec un validation par cross-validation. Nous avons rejoué 100 fois le scénario pour obtenir une moyenne. Nous n'avons pas représenté l'écart-type ici car il est trop faible pour avoir une signification. L'abscisse de cette figure indique le nombre de divisions de la validation croisée.
-			On en déduit qu'entre 4 et 10 divisions la précision change peu. De plus un nombre de 7 division semble être la valeur optimale.
+			La figure \ref{cv_dt} représente la précision du modèle en utilisant la cross-validation. Nous avons rejoué 100 fois le scénario pour obtenir une moyenne. Nous n'avons pas représenté l'écart-type ici car il est trop faible pour avoir une signification. L'abscisse de cette figure indique le nombre de divisions de la validation croisée.
+			On en déduit qu'entre 4 et 10 divisions la précision change peu. De plus un nombre de 7 divisions semble être la valeur optimale.
 
 			\begin{figure}
 			\begin{center}
@@ -323,9 +303,9 @@
 
 		\subsubsection{Random forest}
 		
-			Le deuxième classificateur est le Random Forest. Il s'agit d'un ensemble d'arbres construits aléatoirement et pondérés en fonction de leur résultat. Pour ce classificateur on utilisera uniquement la validation par validation croisée.
+			Le deuxième classificateur est le Random Forest. Il s'agit d'un ensemble d'arbres construits aléatoirement et pondérés en fonction de leurs résultats. Pour ce classificateur on utilisera uniquement la validation croisée.
 
-			Le résultat de la première étude est présenté figure \ref{random_forest}. Il s'agit de regarder l'influence du nombre de découpage sur la précision. On observe une tendance similaire à celle vu dans la figure \ref{cv_dt}, avec néammoins une amplitude atténuée. On en déduit que l'on peut choisir entre 4 et 10 divisions sans grand impact.
+			Le résultat de la première étude est présenté figure \ref{random_forest}. Il s'agit de regarder l'influence du nombre de découpages sur la précision. On observe une tendance similaire à celle vue dans la figure \ref{cv_dt}, avec néammoins une amplitude atténuée. On en déduit que l'on peut choisir entre 4 et 10 divisions sans grand impact.
 
 
 			\begin{figure}
@@ -405,8 +385,16 @@
 					\label{rf_depth}
 				\end{center}
 			\end{figure}
-\section{Analyse des résultats}
 
+
+\section{Pour aller plus loin...}
+	Afin d'obtenir de meilleurs résultats, il existe encore de nombreuses voies à explorer. On pourrait tout d'abord étudier plus précisément le gradient boosting pour améliorer les résultats au maximum. On pourrait en outre tenter d'affiner notre méthode de réduction de caractéristiques car la version actuelle, bien qu'améliorant nos résultats, reste très simpliste.
+
+	Finalement, il serait possible d'utiliser plusieurs estimateurs différents afin de combiner les algorithmes en effectuant des votes à la majorité. On s'attend à pouvoir augmenter nos performances en utilisant une telle technique.
+
+	Notons qu'une des améliorations les plus efficaces serait sans aucun doute d'élargir le jeu de données actuel car la population proposée actuellement est très réduite, elle possède même moins d'individus qu'il n'y a de caractéristiques.
+
+\section{Conclusion}
 	\begin{table}
 	\begin{center}
 	\begin{tabular}{cccc}
@@ -424,16 +412,10 @@
 	\end{center}
 \end{table}
 
-\section{Pour aller plus loin...}
-	Afin d'obtenir de meilleurs résultats, il existe encore de nombreuses voies à explorer. On pourrait tout d'abord étudier plus précisément le gradient boosting pour améliorer les résultats au maximum. On pourrait en outre tenter d'affiner notre méthode de réduction de caractéristiques car la version actuelle, bien qu'améliorant nos résultats, reste très simpliste.
+	L'algorithme nous donnant les meilleurs résultats est la régression logistique pour laquelle les paramètres idéaux ont pu être choisis comme on peut le voir dans le tableau \ref{table:results}.
+	Il faut noter que les algorithmes basés sur les arbres de décision tels que le gradient boosting ou le random forest sont relativement lents et demandent des temps de calcul relativement long d'où la complexité de leur étude précise. Néanmoins, le gradient boosting semble relativement prometteur et on pourrait s'attendre à de meilleurs performance si nous avions le temps de régler finement ses paramètres. En outre, l'élimination préalable de caractéristiques semble profitable aux algorithmes étudiés et pourrait être approfondie.
 
-	Finalement, il serait possible d'utiliser plusieurs estimateurs différents afin de combiner les algorithmes en effectuant des votes à la majorité. On s'attend à pouvoir augmenter nos performances en utilisant une telle technique.
-
-	Notons qu'une des améliorations les plus efficaces serait sans aucun doute d'élargir le jeu de données actuel car la population proposée actuellement est très réduite, elle possède même moins d'individus qu'il n'y a de caractéristiques.
-
-\section{Conclusion}
-	L'algorithme nous donnant les meilleurs résultats est la régression logistique pour laquelle les paramètres idéaux ont pu être choisis.
-	Il faut noter que les algorithmes basés sur les arbres de décision tels que le gradient boosting ou le random forest sont relativement lents et demandent des temps de calcul relativement long d'où la complexité de leur étude précise. Néanmoins, le gradient boosting semble relativement prometteur et on pourrait s'attendre à de meilleurs performance si nous avions le temps de régler finement ses paramètres. En outre, l'élimination préalable de caractéristique semble profitable aux algorithmes étudiés et pourrait être approfondie.
+	En dernier lieu, on peut remarquer que l'on obtient de très bons résultats étant donné la faible taille de la population. Les virus et exécutables bénins existent en de très grandes variétés et il semble impressionant d'obtenir des résultats aussi satisfaisants. On pourrait se demander si les populations recensées dans le jeu de données ne sont pas biaisées en incluant majoritairement certains types de programmes bénins ou de virus. Néanmoins seule une étude plus approfondie sur un jeu de données plus large et mieux controlé pourrait répondre à cette interrogation.
 
 \bibliographystyle{unsrt}
 \bibliography{synopsis.bib}
