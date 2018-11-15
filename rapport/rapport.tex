@@ -75,7 +75,7 @@
 	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
 
 \section{Objectifs}
-	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Pour un même score, on s'attachera à optimiser le nombre de faux-négatifs car c'est le cas le plus préoccupant dans le cadre de la détection de virus. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
+	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
 
 \section{Pré-traitement des données}
 	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune. On peut en outre remarquer que la quasi totalité des virus possèdent un nombre de caractéristique situé entre 80 et 110 tandis qu'il existe des programmes bénins avec plus ou moins de caractéristiques. Cette observation pourra nous mener à tenter de restreindre certaines analyses futures aux programmes possédant entre 80 et 110 caractéristiques en supposant que les programmes bénins ne respectant pas ce critère peuvent être considérés comme des valeurs extrèmes.
@@ -220,11 +220,9 @@
 						width=0.5\linewidth,
 						height=6cm,
 						ylabel={Score moyen},
-						xlabel={Proportion utilisée pour l'apprentissage},
-						clip mode=individual,
+						xlabel={Proportion utilisée pour l'apprentissage}
 						],
 						\addplot table [x=train_size, y=mean, only marks] {data/logreg_l1_c05_trainsize.dat};
-						\addplot[samples=100, no markers, domain=0.1:0.99, style=thick, color=red]{x^0.09162945*exp(-0.12192647)};
 						% \addplot[sharp plot,mark=square*,black]
 						% coordinates
 						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
@@ -305,6 +303,7 @@
 			On en déduit qu'entre 4 et 10 divisions la précision change peu. De plus un nombre de 7 division semble être la valeur optimale.
 
 			\begin{figure}
+			\begin{center}
 				\begin{tikzpicture}
 					\begin{axis}[
 						width=0.5\linewidth,
@@ -318,6 +317,7 @@
 				\end{tikzpicture}
 				\caption{Moyenne pour 100 cross-validations}
 				\label{cv_dt}
+			\end{center}
 			\end{figure}
 
 
@@ -329,9 +329,10 @@
 
 
 			\begin{figure}
+			\begin{center}
 				\begin{tikzpicture}
 					\begin{axis}[
-						width=0.5\linewidth,
+						width=0.7\linewidth,
 						height=6cm,
 						ylabel={Moyenne de précision},
 						xlabel={Nombre de parts},
@@ -342,14 +343,16 @@
 				\end{tikzpicture}
 				\caption{Impact du nombre de division}
 				\label{random_forest}
+			\end{center}
 			\end{figure}
 
 			La seconde étude consiste à observer l'influence du nombre d'arbres sur la précision. Les résultats sont présentés figure \ref{rf_estimators}. On observe que si on choisit un nombre trop faible d'estimateurs, la précision se dégrade très rapidement. En outre on remarque qu'a partir de 50 estimateurs la précision reste constante, il serait donc inutile de choisir un nombre d'estimateurs supérieur à 50 car cela reviendrait à consommer de la puissance de calcul inutilement.
 
 			\begin{figure}
+			\begin{center}
 				\begin{tikzpicture}
 					\begin{axis}[
-						width=0.5\linewidth,
+						width=0.7\linewidth,
 						height=6cm,
 						ylabel={Moyenne de précision},
 						xlabel={estimators}
@@ -359,6 +362,7 @@
 				\end{tikzpicture}
 				\caption{Impact du nombre d'estimateurs}
 				\label{rf_estimators}
+			\end{center}
 			\end{figure}
 
 
@@ -381,6 +385,24 @@
 
 			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effictivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
 
+		\subsubsection{Gradient Boosting}
+
+			\begin{figure}
+				\begin{center}
+					\begin{tikzpicture}
+						\begin{axis}[
+							width=0.7\linewidth,
+							height=6cm,
+							ylabel={Moyenne de précision},
+							xlabel={Nombre de parts}
+							],
+							\addplot table [x index=0, y index=1, only marks] {data/gradiant_boosting.txt};
+						\end{axis}
+					\end{tikzpicture}
+					\caption{Impact de la profondeur maximale}
+					\label{rf_depth}
+				\end{center}
+			\end{figure}
 \section{Analyse des résultats}
 
 	\begin{table}
@@ -401,9 +423,10 @@
 \end{table}
 
 \section{Pour aller plus loin...}
+cumuler n estimateurs
 
 \section{Conclusion}
-	On mérite au moins 21/20.
+	gradient boosting + random forest : des temps de calcul très très long
 
 \bibliographystyle{unsrt}
 \bibliography{synopsis.bib}
