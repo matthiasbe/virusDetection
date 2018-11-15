@@ -18,6 +18,7 @@
 \usepackage[mode=buildnew]{standalone}
 \usepackage{booktabs}
 \usepackage{wasysym}
+\usepackage{pgfplots}
 
 
 \DeclareSIUnit\year{yr}
@@ -83,13 +84,49 @@
 \begin{frame}{Présentation du dataset}
 \end{frame}
 
-\begin{frame}{Algorithme : regression logistique}
+\begin{frame}{Algorithme : Regression logistique}
 \end{frame}
 
-\begin{frame}{Algorithme : Arbre de décision}
+\begin{frame}{Arbre de décision - data-splitting}
+	\begin{figure}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.4\linewidth,
+				height=6cm,
+				ylabel={Moyenne de précision},
+				xlabel={Taille de l'ensemble de test}
+				],
+				\addplot table [x index=0, y index=1, only marks] {../data/decision_tree.txt};
+			\end{axis}
+		\end{tikzpicture}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.5\linewidth,
+				height=6cm,
+				ylabel={Ecart-type en précision},
+				xlabel={Taille de l'ensemble de test}
+				],
+				\addplot table [x index=0, y index=2, only marks] {../data/decision_tree.txt};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Moyenne et Ecart-type pour 1000 data-splitting}
+		\label{data-splitting-dt}
+	\end{figure}
 \end{frame}
 
-\begin{frame}{Algorithme : Random Forest}
+\begin{frame}{Arbre de décision - Validation croisée}
+\end{frame}
+
+\begin{frame}{Random Forest - Validation croisée}
+\end{frame}
+
+\begin{frame}{Random Forest - Impact du nombre d'arbres}
+\end{frame}
+
+\begin{frame}{Random Forest - Impact de la profondeur}
+\end{frame}
+
+\begin{frame}{Random Forest - Impact de la profondeur}
 \end{frame}
 
 \begin{frame}{Analyse des résultats}

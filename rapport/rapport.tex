@@ -341,7 +341,7 @@
 						\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Impact du nombre de division}
+				\caption{Impact du nombre de division (100 répétitions)}
 				\label{random_forest}
 			\end{center}
 			\end{figure}
@@ -355,12 +355,12 @@
 						width=0.7\linewidth,
 						height=6cm,
 						ylabel={Moyenne de précision},
-						xlabel={estimators}
+						xlabel={Nombre d'estimateurs}
 						],
 						\addplot table [x index=0, y index=1, only marks] {data/random_forest_estimators.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Impact du nombre d'estimateurs}
+				\caption{Impact du nombre d'estimateurs (100 répétitions)}
 				\label{rf_estimators}
 			\end{center}
 			\end{figure}
@@ -369,18 +369,20 @@
 			La troisième et dernière étude du Random Forest présente l'impact de la profondeur des arbres sur la précision de l'algorithme. On peut observer sur la figure \ref{rf_depth} les résultats obtenus. On retrouve la même tendance que dans l'étude précédente à propos du nombre d'arbre : si on diminue la profondeur, la précision se dégrade. Par ailleurs la précision stagne pour une profondeur supérieur à 20.
 
 			\begin{figure}
-				\begin{tikzpicture}
-					\begin{axis}[
-						width=0.5\linewidth,
-						height=6cm,
-						ylabel={Moyenne de précision},
-						xlabel={Profondeur maximum d'arbre}
-						],
-						\addplot table [x index=0, y index=1, only marks] {data/random_forest_depth.txt};
-					\end{axis}
-				\end{tikzpicture}
-				\caption{Impact de la profondeur maximale}
-				\label{rf_depth}
+				\begin{center}
+					\begin{tikzpicture}
+						\begin{axis}[
+							width=0.7\linewidth,
+							height=6cm,
+							ylabel={Moyenne de précision},
+							xlabel={Profondeur maximum d'arbre}
+							],
+							\addplot table [x index=0, y index=1, only marks] {data/random_forest_depth.txt};
+						\end{axis}
+					\end{tikzpicture}
+					\caption{Impact de la profondeur maximale (100 répétitions)}
+					\label{rf_depth}
+				\end{center}
 			\end{figure}
 
 			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effectivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
