@@ -222,9 +222,11 @@
 						width=0.5\linewidth,
 						height=6cm,
 						ylabel={Score moyen},
-						xlabel={Proportion utilisée pour l'apprentissage}
+						xlabel={Proportion utilisée pour l'apprentissage},
+						clip mode=individual,
 						],
 						\addplot table [x=train_size, y=mean, only marks] {data/logreg_l1_c05_trainsize.dat};
+						\addplot[samples=100, no markers, domain=0.1:0.99, style=thick, color=red]{x^0.09162945*exp(-0.12192647)};
 						% \addplot[sharp plot,mark=square*,black]
 						% coordinates
 						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
