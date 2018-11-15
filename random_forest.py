@@ -10,46 +10,22 @@ ftcount = 531
 datafile = 'Dataset/dataset.train'
 
 train = preprocessing.get_data(datafile, ftcount)
+train = preprocessing.remove_data(train)
+train = preprocessing.remove_features(train)
 
 trainm = preprocessing.mask_unused_features(train)
-
-
-x = []
-meany = []
-
-for t in range(2,11):
-    results = []
         
 x = []
 meany = []
 sdy = []
+t = 7
+N=100
+results = np.zeros((N,1))
+for i in range(N):
+    print("{0:.2%}".format(float(i)/N))
+    rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50)
 
-for t in range(2,11):
-    results = []
-    for i in range(1,100):
-        rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50, max_depth=5)
-
-        cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=t)
-        results.append(np.average(cv_rf))
-    
-    x.append(t)
-    meany.append(np.mean(results))
-    sdy.append(np.std(results))
-    print(t)
-
-
-np.savetxt("results/random_forest.txt",np.array([x,meany,sdy]).T);
-
-plt.subplot(121)
-plt.plot(x, meany)
-plt.title("Moyenne")
-
-plt.subplot(122)
-plt.plot(x, sdy)
-plt.title("Standard deviation")
-
-
-
-
+    cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=t)
+    results[i] = cv_rf.mean()
 plt.show()
 

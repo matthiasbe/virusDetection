@@ -13,6 +13,8 @@ ftcount = 531
 datafile = 'Dataset/dataset.train'
 
 train = preprocessing.get_data(datafile, ftcount)
+train = preprocessing.remove_features(train)
+# train = preprocessing.remove_data(train)
 trainm = preprocessing.mask_unused_features(train)
 
 N = 500
@@ -21,6 +23,7 @@ N = 500
 # evaluation_full = np.zeros((Npoints, N));
 train_size = 0.8;
 Cval = 0.4;
+results = np.zeros((N,3))
 for n in range(N):
 	print("{0:.2%}".format(float(n)/N))
 	# evaluation = np.zeros((Npoints,4))
@@ -28,10 +31,14 @@ for n in range(N):
 	# for i,train_size in enumerate(np.linspace(0.1, 1, Npoints, endpoint=False)):
 	# for i, Cval in enumerate(np.linspace(0.01, 2., Npoints, endpoint=False)):
 	train, test = train_test_split(trainm, train_size=train_size, test_size=1-train_size)#, random_state=666)
-	clf = LogisticRegression(solver='liblinear', penalty="l2", C=Cval).fit(train[:,:-1], train[:,-1])
+	clf = LogisticRegression(solver='liblinear', penalty="l1", C=Cval).fit(train[:,:-1], train[:,-1])
 	#clf = svm.SVC(gamma='auto', C=1).fit(train[:,:-1], train[:,-1])
 	prediction = clf.predict(test[:,:-1])
 	false, missed, correct = postprocessing.evaluate(prediction, test[:,-1])
+	results[n,:] = correct, false, missed
+print("Score : {}".format(results[:,0].mean()))
+print("Faux positifs : {}".format(results[:,1].mean()))
+print("Faux negatifs : {}".format(results[:,2].mean()))
 	# evaluation[i,:] = Cval, false, missed, correct
 		# evaluation_full[i,n] = correct;
 	# evaluation_tot = evaluation_tot + evaluation / N
