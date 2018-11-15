@@ -72,7 +72,7 @@
 
 \section{Présentation du jeu de données}
 	Nos données proviennent de la base de données UCI \cite{UCI}.
-	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme. Pour chacune d'entre elles, une efficacité est calculée et seules les caractéristiques les plus efficaces sont conservées.
+	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristiques assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme. Pour chacune d'entre elles, une efficacité est calculée et seules les caractéristiques les plus efficaces sont conservées.
 
 \section{Objectifs}
 	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Pour un même score, on s'attachera à optimiser le nombre de faux-négatifs car c'est le cas le plus préoccupant dans le cadre de la détection de virus. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
@@ -187,11 +187,11 @@
 
 		La régression logistique permet d'effectuer une pénalisation de type L1 ou L2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression. Cette pénalisation peut s'ajuster avec Scikit-Learn au travers d'un paramètre $C$ qui est l'inverse de la constante de régularisation. Ainsi on augmente la pénalisation lorsque l'on diminue $C$.
 
-		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Le taux de faux-négatifs commence alors à très légèrement augmenter. Il semble qu'aucune valeur spécifique permette d'optimiser le nombre de faux-négatifs par rapport aux faux-positifs. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
+		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importante et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Le taux de faux-négatifs commence alors à très légèrement augmenter. Il semble qu'aucune valeur spécifique permette d'optimiser le nombre de faux-négatifs par rapport aux faux-positifs. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
 
 		Dans un second temps, on peut tenter d'optimiser la proportion à utiliser entre les données d'entrainement et de test afin d'obtenir les meilleurs résultats. On peut observer sur la figure \ref{logreg_meanstd} les tracés de la valeur moyenne et de l'écart-type du score obtenus après 500 répétitions aléatoires. Le score moyen augmente en suivant une loi de puissance de paramètre $0.09$ lorsque la quantité de données d'entrainement augmente. Néanmoins l'écart-type commence à augmenter fortement lorsque la proportion des données d'entrainement dépasse $0.8$ ce qui est attendu car alors la quantité d'exemples de test devient très faible. Le choix le plus judicieux du paramètre de proportion semble alors être $0.8$ ce qui permet d'atteindre une précision moyenne de $\SI{87}{\percent}$.
 
-		Lorsque l'on tente de restreindre le nombre de programmes à étudier en ne sélectionnant que ceux avec un nombre de caractéristiques entre 80 et 110, la précision moyenne chute à $\SI{84}{\percent}$. Il est propable que cette restriction ne soit pas judicieuse car on ne possède déjà qu'une population de très petite taille devant le nombre de caractéristiques. Néanmoins lorsque l'on élimine toutes les caractéristiques faiblement représentatives c'est à dire celles possédées par plus de 240 individus, on obtient des résultats tout aussi bon qu'en les laissant. Ainsi, il peut être judicieux de ne pas tenir compte de ces caractéristiques.
+		Lorsque l'on tente de restreindre le nombre de programmes à étudier en ne sélectionnant que ceux avec un nombre de caractéristiques entre 80 et 110, la précision moyenne chute à $\SI{84}{\percent}$. Il est probable que cette restriction ne soit pas judicieuse car on ne possède déjà qu'une population de très petite taille devant le nombre de caractéristiques. Néanmoins lorsque l'on élimine toutes les caractéristiques faiblement représentatives c'est à dire celles possédées par plus de 240 individus, on obtient des résultats tout aussi bon qu'en les laissant. Ainsi, il peut être judicieux de ne pas tenir compte de ces caractéristiques.
 
 
 
@@ -254,7 +254,7 @@
 		\subsubsection{Arbre simple}
 			Comme premier classificateur on utilise un unique arbre de décision. On compare les deux méthodes de validation : tout d'abord le data-splitting et ensuite la validation croisée. Dans chaque cas on observe l'impact de la proportion des données d'entrainement sur la précision et la robustesse du modèle.
 
-			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour 1000 répétitions du data-splitting. Chaque abscisse correspond à une proportion des données de test. On observe un minimum d'écart-type pour $175$ individus au sein du groupe de test. Cela montre que le modèle le plus robuste correspond à des données de test représentant environ 45\% de la population.
+			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenus pour 1000 répétitions du data-splitting. Chaque abscisse correspond à une proportion des données de test. On observe un minimum d'écart-type pour $175$ individus au sein du groupe de test. Cela montre que le modèle le plus robuste correspond à des données de test représentant environ 45\% de la population.
 
 			\begin{figure}
 				\begin{tikzpicture}
@@ -348,7 +348,7 @@
 			\end{figure}
 
 
-			La troisième et dernière étude du Random Forest présente l'impact de la profondeur des arbres sur la précision de l'algorithme. On peut observer sur la figure \ref{rf_depth} les résultats obtenus. On retrouve la même tendance que dans l'étude précédente à propos du nombre d'arbre : si on diminue la profondeur, la précision se dégrade. Par ailleurs la précision stagne pour une profondeur supérieur à 20.
+			La troisième et dernière étude du Random Forest présente l'impact de la profondeur des arbres sur la précision de l'algorithme. On peut observer sur la figure \ref{rf_depth} les résultats obtenus. On retrouve la même tendance que dans l'étude précédente à propos du nombre d'arbres : si on diminue la profondeur, la précision se dégrade. Par ailleurs la précision stagne pour une profondeur supérieure à 20.
 
 			\begin{figure}
 				\begin{center}
@@ -367,7 +367,7 @@
 				\end{center}
 			\end{figure}
 
-			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effectivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
+			On peut finalement tenter d'appliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effectivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
 
 		\subsubsection{Gradient Boosting}
 
@@ -375,7 +375,7 @@
 
 			L'inconvénient de cette méthode est qu'elle demande un grande puissance de calcul. Nous ne présentons ici que l'influence de la profondeur des arbres sur la précision des arbres obtenus. Pour une raison qui nous est inconnue les autres calculs que ne nous avons présentés pour le Random Forest ont un temps d'exécution beaucoup plus long pour le Gradient Boosting.
 
-			La figure \ref{gb_estimators} présente les résultat du calcul. Cette approche apporte de bien meilleurs résultat que celles présentées ci-dessus. On atteint en effet une précision de 86\%. Les résultats sont à nuancer car nous n'avons utilisé que 30 répétitions.
+			La figure \ref{gb_estimators} présente les résultats du calcul. Cette approche apporte de bien meilleurs résultat que celles présentées ci-dessus. On atteint en effet une précision de 86\%. Les résultats sont à nuancer car nous n'avons utilisé que 30 répétitions.
 
 			\begin{figure}
 				\begin{center}
@@ -421,7 +421,7 @@
 \end{table}
 
 	L'algorithme nous donnant les meilleurs résultats est la régression logistique pour laquelle les paramètres idéaux ont pu être choisis comme on peut le voir dans le tableau \ref{table:results}.
-	Il faut noter que les algorithmes basés sur les arbres de décision tels que le gradient boosting ou le random forest sont relativement lents et demandent des temps de calcul relativement long d'où la complexité de leur étude précise. Néanmoins, le gradient boosting semble relativement prometteur et on pourrait s'attendre à de meilleurs performance si nous avions le temps de régler finement ses paramètres. En outre, l'élimination préalable de caractéristiques semble profitable aux algorithmes étudiés et pourrait être approfondie.
+	Il faut noter que les algorithmes basés sur les arbres de décision tels que le gradient boosting ou le random forest sont relativement lents et demandent des temps de calcul relativement longs d'où la complexité de leur étude précise. Néanmoins, le gradient boosting semble relativement prometteur et on pourrait s'attendre à de meilleures performance si nous avions le temps de régler finement ses paramètres. En outre, l'élimination préalable de caractéristiques semble profitable aux algorithmes étudiés et pourrait être approfondie.
 
 	En dernier lieu, on peut remarquer que l'on obtient de très bons résultats étant donné la faible taille de la population. Les virus et exécutables bénins existent en de très grandes variétés et il semble impressionant d'obtenir des résultats aussi satisfaisants. On pourrait se demander si les populations recensées dans le jeu de données ne sont pas biaisées en incluant majoritairement certains types de programmes bénins ou de virus. Néanmoins seule une étude plus approfondie sur un jeu de données plus large et mieux controlé pourrait répondre à cette interrogation.
 
