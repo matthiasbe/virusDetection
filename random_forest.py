@@ -17,22 +17,39 @@ trainm = preprocessing.mask_unused_features(train)
 x = []
 meany = []
 
-for t in range(5,8):
+for t in range(2,11):
     results = []
         
-    rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50, max_depth=5)
+x = []
+meany = []
+sdy = []
 
-    shuffled = sklearn.utils.shuffle(trainm[:,:-1])
-    cv_rf = sklearn.model_selection.cross_val_score(rf, shuffled, trainm[:,-1], cv=t)
-    result = np.average(cv_rf)
+for t in range(2,11):
+    results = []
+    for i in range(1,100):
+        rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50, max_depth=5)
+
+        shuffled = sklearn.utils.shuffle(trainm[:,:-1])
+        cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=t)
+        results.append(np.average(cv_rf))
+    
     x.append(t)
-    meany.append(result)
-    print(str(t) + " : " + str(result))
+    meany.append(np.mean(results))
+    sdy.append(np.std(results))
+    print(t)
 
-np.savetxt("results/random_forest.txt",np.array([x,meany]).T);
 
+np.savetxt("results/random_forest.txt",np.array([x,meany,sdy]).T);
+
+plt.subplot(121)
 plt.plot(x, meany)
 plt.title("Moyenne")
+
+plt.subplot(122)
+plt.plot(x, sdy)
+plt.title("Standard deviation")
+
+
 
 
 plt.show()

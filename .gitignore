@@ -1,9 +1,2 @@
-rapport/rapport.aux
-rapport/rapport.bbl
-rapport/rapport.blg
-rapport/rapport.fdb_latexmk
-rapport/rapport.fls
-rapport/rapport.log
-rapport/rapport.out
-rapport/rapport.synctex.gz
-rapport/rapport.toc
+rapport/*
+!rapport/rapport.tex
