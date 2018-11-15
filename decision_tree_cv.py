@@ -17,12 +17,11 @@ x = []
 meany = []
 sdy = []
 
-for t in range(2,10):
+for t in range(2,11):
     results = []
-    for i in range(1,1000):
+    for i in range(1,100):
         clf = sklearn.tree.DecisionTreeClassifier()
-        shuffled = sklearn.utils.shuffle(trainm[:,:-1])
-        cv_dt = sklearn.model_selection.cross_val_score(clf, shuffled, trainm[:,-1], cv=t)
+        cv_dt = sklearn.model_selection.cross_val_score(clf, trainm[:,:-1], trainm[:,-1], cv=t)
         results.append(np.average(cv_dt))
 
     x.append(t)

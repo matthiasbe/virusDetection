@@ -271,13 +271,13 @@
 						width=0.5\linewidth,
 						height=6cm,
 						ylabel={Moyenne de précision},
-						xlabel={Taille de l'ensemble de test},
+						xlabel={Nombre de parts},
 						ymin=0
 						],
 						\addplot table [x index=0, y index=1, only marks] {data/decision_tree_cv.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Moyenne et Ecart-type pour 1000 cross-validations}
+				\caption{Moyenne pour 1000 cross-validations}
 			\end{figure}
 
 
@@ -287,11 +287,13 @@
 				\begin{axis}[
 					width=0.5\linewidth,
 					height=6cm,
-					ylabel={Moyenne du score},
-					xlabel={Coefficient de pénalisation L1 : C}
+					ylabel={Moyenne de précision},
+					xlabel={Nombre de parts},
+					ymin=0
 					],
 					\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
 				\end{axis}
+				\caption{Moyenne pour 50 cross-validations}
 			\end{tikzpicture}
 
 
