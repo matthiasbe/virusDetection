@@ -187,6 +187,8 @@
 
 		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
 
+		Dans un second temps, on peut tenter d'optimiser la proportion à utiliser entre les données d'entrainement de test afin d'obtenir les meilleurs résultats. On peut observer sur la figure \ref{logreg_meanstd} les tracés de la valeur moyenne et de l'écart-type du score obtenus après 500 répétitions aléatoires. Le score moyen augmente en suivant une loi de puissance de paramètre $0.09$ lorsque la quantité de données d'entrainement augmente. Néanmoins l'écart-type commence à exploser lorsque la proportion des données d'entrainement dépasse $0.8$ ce qui est attendu car alors la quantité d'exemples de test devient très faible. Le choix le plus judicieux du paramètre de proportion semble alors être $0.8$ ce qui permet d'atteindre une précision moyenne de $\SI{87}{\percent}$.
+
 		\begin{figure}
 			\begin{center}
 			\begin{tikzpicture}
@@ -214,9 +216,11 @@
 						width=0.5\linewidth,
 						height=6cm,
 						ylabel={Score moyen},
-						xlabel={Proportion utilisée pour l'apprentissage}
+						xlabel={Proportion utilisée pour l'apprentissage},
+						clip mode=individual,
 						],
 						\addplot table [x=train_size, y=mean, only marks] {data/logreg_l1_c05_trainsize.dat};
+						\addplot[samples=100, no markers, domain=0.1:0.99, style=thick, color=red]{x^0.09162945*exp(-0.12192647)};
 						% \addplot[sharp plot,mark=square*,black]
 						% coordinates
 						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
