@@ -33,7 +33,9 @@ for t in range(20,340,20):
     x.append(t)
     meany.append(np.mean(results))
     sdy.append(np.std(results))
-    print(t + " : " + meany[t] + " - " + sdy[t])
+    print(t)
+
+np.savetxt("results/decision_tree.txt",np.array([x,meany,sdy]).T);
 
 plt.subplot(121)
 plt.plot(x, meany)

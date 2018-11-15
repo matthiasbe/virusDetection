@@ -31,7 +31,7 @@ for t in range(2,10):
     print(t)
 
 
-np.savetxt("results/decision_tree.txt",[x,meany,sdy].T);
+np.savetxt("results/decision_tree_cv.txt",np.array([x,meany,sdy]).T);
 
 plt.subplot(121)
 plt.plot(x, meany)

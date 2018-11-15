@@ -160,7 +160,7 @@
 	On présente ici les deux techniques utilisées pour valider les modèles de classification.
 
 	\subsection{Data-splitting}		
-		La première technique de validation utilisé est la technique de data-splitting. On divise le jeu de données en deux aléatoirement, la première partie servant à entrainer le modèle. On utilise la deuxième partie des données pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
+		La première technique de validation utilisée est la technique de data-splitting. On divise aléatoirement le jeu de données en deux, la première partie servant à entrainer le modèle. On utilise la deuxième partie des données pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
 		Cette technique produit des résultats très différent suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera souvent un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
 
 	\subsection{Cross-validation}
@@ -241,15 +241,59 @@
 
 	\subsection{Arbre de décision}
 
-		\subsubsection{Data-splitting}
-
-
-
-
-		\subsubsection{Validation croisée}		
+		\subsubsection{Arbre simple}
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Moyenne de précision},
+						xlabel={Taille de l'ensemble de test}
+						],
+						\addplot table [x index=0, y index=1, only marks] {data/decision_tree.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Ecart-type en précision},
+						xlabel={Taille de l'ensemble de test}
+						],
+						\addplot table [x index=0, y index=2, only marks] {data/decision_tree.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Moyenne et Ecart-type pour 1000 data-splitting}
+			\end{figure}
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Moyenne de précision},
+						xlabel={Taille de l'ensemble de test},
+						ymin=0
+						],
+						\addplot table [x index=0, y index=1, only marks] {data/decision_tree_cv.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Moyenne et Ecart-type pour 1000 cross-validations}
+			\end{figure}
 
 
 		\subsubsection{Random forest}
+			
+			\begin{tikzpicture}
+				\begin{axis}[
+					width=0.5\linewidth,
+					height=6cm,
+					ylabel={Moyenne du score},
+					xlabel={Coefficient de pénalisation L1 : C}
+					],
+					\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
+				\end{axis}
+			\end{tikzpicture}
+
 
 \section{Analyse des résultats}
 
