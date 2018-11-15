@@ -194,6 +194,25 @@
 	\end{figure}
 \end{frame}
 
+\begin{frame}{Gradient Boosting - Impact de la profondeur}
+	\begin{figure}
+		\begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					width=0.7\linewidth,
+					height=6cm,
+					ylabel={Moyenne de précision},
+					xlabel={Profondeur maximale des arbres}
+					],
+					\addplot table [x index=0, y index=1, only marks] {../data/gradiant_boosting_estimators.txt};
+				\end{axis}
+			\end{tikzpicture}
+			\caption{Gradient Boosting - Impact de la profondeur maximale (30 répétitions)}
+			\label{gb_estimators}
+		\end{center}
+	\end{figure}
+\end{frame}
+
 \begin{frame}{Analyse des résultats}
 \end{frame}
 
