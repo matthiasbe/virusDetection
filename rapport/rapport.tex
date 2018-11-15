@@ -275,7 +275,7 @@
 						\addplot table [x index=0, y index=2, only marks] {data/decision_tree.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Moyenne et Ecart-type pour 1000 data-splitting}
+				\caption{Arbre de décision - Moyenne et Ecart-type pour 1000 data-splitting}
 				\label{data-splitting-dt}
 			\end{figure}
 
@@ -295,7 +295,7 @@
 						\addplot table [x index=0, y index=1, only marks] {data/decision_tree_cv.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Moyenne pour 100 cross-validations}
+				\caption{Arbre de décision - Moyenne pour 100 cross-validations}
 				\label{cv_dt}
 			\end{center}
 			\end{figure}
@@ -321,7 +321,7 @@
 						\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Impact du nombre de division (100 répétitions)}
+				\caption{Random Forest - Impact du nombre de division (100 répétitions)}
 				\label{random_forest}
 			\end{center}
 			\end{figure}
@@ -340,7 +340,7 @@
 						\addplot table [x index=0, y index=1, only marks] {data/random_forest_estimators.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Impact du nombre d'estimateurs (100 répétitions)}
+				\caption{Random Forest - Impact du nombre d'estimateurs (100 répétitions)}
 				\label{rf_estimators}
 			\end{center}
 			\end{figure}
@@ -360,7 +360,7 @@
 							\addplot table [x index=0, y index=1, only marks] {data/random_forest_depth.txt};
 						\end{axis}
 					\end{tikzpicture}
-					\caption{Impact de la profondeur maximale (100 répétitions)}
+					\caption{Random Forest - Impact de la profondeur maximale (100 répétitions)}
 					\label{rf_depth}
 				\end{center}
 			\end{figure}
@@ -369,6 +369,12 @@
 
 		\subsubsection{Gradient Boosting}
 
+			Une autre approche utilisant les arbres de décision est le Gradient Boosting. Dans cet algorithme, les arbres ne sont pas générés aléatoirement comme dans le Random Forest, mais en utilisant les résultats des arbres précédents.
+
+			L'inconvénient de cette méthode est qu'elle demande un grande puissance de calcul. Nous ne présentons ici que l'influence de la profondeur des arbres sur la précision des arbres obtenus. Pour une raison qui nous est inconnue les autres calculs que ne nous avons présentés pour le Random Forest ont un temps d'exécution beaucoup plus long pour le Gradient Boosting.
+
+			La figure \ref{gb_estimators} présente les résultat du calcul. Cette approche apporte de bien meilleurs résultat que celles présentées ci-dessus. On atteint en effet une précision de 86\%. Les résultats sont à nuancer car nous n'avons utilisé que 30 répétitions.
+
 			\begin{figure}
 				\begin{center}
 					\begin{tikzpicture}
@@ -376,13 +382,13 @@
 							width=0.7\linewidth,
 							height=6cm,
 							ylabel={Moyenne de précision},
-							xlabel={Nombre de parts}
+							xlabel={Profondeur maximale des arbres}
 							],
-							\addplot table [x index=0, y index=1, only marks] {data/gradiant_boosting.txt};
+							\addplot table [x index=0, y index=1, only marks] {data/gradiant_boosting_estimators.txt};
 						\end{axis}
 					\end{tikzpicture}
-					\caption{Impact de la profondeur maximale}
-					\label{rf_depth}
+					\caption{Gradient Boosting - Impact de la profondeur maximale (30 répétitions)}
+					\label{gb_estimators}
 				\end{center}
 			\end{figure}
 

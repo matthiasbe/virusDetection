@@ -101,7 +101,7 @@
 		\end{tikzpicture}
 		\begin{tikzpicture}
 			\begin{axis}[
-				width=0.5\linewidth,
+				width=0.4\linewidth,
 				height=6cm,
 				ylabel={Ecart-type en précision},
 				xlabel={Taille de l'ensemble de test}
@@ -115,6 +115,23 @@
 \end{frame}
 
 \begin{frame}{Arbre de décision - Validation croisée}
+	\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.5\linewidth,
+				height=6cm,
+				ylabel={Moyenne de précision},
+				xlabel={Nombre de parts},
+				ymin=0
+				],
+				\addplot table [x index=0, y index=1, only marks] {../data/decision_tree_cv.txt};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Moyenne pour 100 cross-validations}
+		\label{cv_dt}
+	\end{center}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Random Forest - Validation croisée}
