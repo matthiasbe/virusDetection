@@ -1,2 +1,5 @@
 rapport/*
 !rapport/rapport.tex
+!rapport/data
+.vscode
+*.swp
