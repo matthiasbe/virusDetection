@@ -10,14 +10,14 @@ train = preprocessing.get_data(datafile, ftcount)
 
 # Count of individuals in each feature
 plt.figure(1)
-plt.hist(train.sum(axis=0))
+plt.hist(train.sum(axis=0), bins=20)
 plt.title("Count of individual per feature")
 plt.ylabel("Number of features")
 plt.xlabel("Number of individuals")
 
 # Count of features for each individual
 plt.figure(2)
-plt.hist(train.sum(axis=1))
+plt.hist(train.sum(axis=1), bins=20)
 plt.title("Count of features per individual")
 plt.xlabel("Number of features")
 plt.ylabel("Number of individuals")

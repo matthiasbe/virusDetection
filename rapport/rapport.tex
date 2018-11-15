@@ -16,7 +16,6 @@
 \usepackage{fancyhdr}
 \usepackage{siunitx}
 \usepackage{hepnames}
-\usepackage{tikz-feynman}
 \usepackage[version=4]{mhchem} 
 \usepackage[mode=buildnew]{standalone}
 \usepackage{booktabs}
@@ -24,6 +23,8 @@
 \usepackage{appendix}
 \usepackage{pgfplots}
 \usepackage[hidelinks]{hyperref}
+
+\pgfplotsset{compat=1.3}
 
 \addto\captionsfrench{% Replace "english" with the language you use
   \renewcommand{\contentsname}%
@@ -63,7 +64,7 @@
 
 	{\LARGE\centering Classifications de programmes malicieux et non-malicieux\\ à partir de propriétés binaires}\\[1cm]
 
-	{ Matthias \bsc{Beupère}, Pierre \bsc{Granger}}\\[0.5cm]
+	{ Matthias \bsc{Beaupère}, Pierre \bsc{Granger}}\\[0.5cm]
 	{Rapport DA - CHPS - \today}
 \end{center}
 
@@ -71,14 +72,161 @@
 
 \section{Présentation du jeu de données}
 	Nos données proviennent de la base de données UCI\cite{UCI}.
-	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}.
+	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de carctéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les carctéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
 
 \section{Pré-traitement des données}
+	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune.
+
+	\begin{center}
+	\begin{figure}
+	\begin{tikzpicture}
+	\begin{axis}[
+	width=\linewidth,
+	height=6cm,
+	ybar stacked,
+	ybar interval=1,
+	ybar legend,
+	xmin=50,xmax=250,
+	ymin=0, ymax=300,
+	% xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+	x tick label style= {rotate=90,anchor=east},
+	xlabel={Nombre de caractéristiques},
+	ylabel={Nombre de programmes}
+	],
+	\addplot+[ybar] table[x index= 0, y index=1] {data/hist_tab.dat};
+	\addplot+[ybar] table[x index= 0, y index=2] {data/hist_tab.dat};
+	% \addplot[sharp plot,mark=square*,black]
+	% coordinates
+	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{VIRUS\label{hist_features}}
+	\end{figure}
+	\end{center}
+
+
+	\begin{center}
+	\begin{figure}
+	\begin{tikzpicture}
+	\begin{axis}[
+	width=\linewidth,
+	height=6cm,
+	xmin=50,xmax=250,
+	ymin=0, ymax=300,
+	ybar interval,
+	xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+	x tick label style= {rotate=90,anchor=east},
+	xlabel={Nombre de caractéristiques},
+	ylabel={Nombre de programmes}
+	],
+	\addplot+[hist={bins=20, data max=250,data min=50}]
+	table[y index=0] {data/hist_features.dat};
+	% \addplot[sharp plot,mark=square*,black]
+	% coordinates
+	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Histogramme du nombre de caractéristiques possédé par chaque programme\label{hist_features}}
+	\end{figure}
+	\end{center}
+
+	\begin{center}
+	\begin{figure}
+	\begin{tikzpicture}
+	\begin{axis}[
+	width=\linewidth,
+	height=6cm,
+	xmin=0,xmax=400,
+	ymin=0, ymax=300,
+	ybar interval,
+	xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+	x tick label style= {rotate=90,anchor=east},
+	ylabel={Nombre de caractéristiques},
+	xlabel={Nombre de programmes}
+	],
+	\addplot+[hist={bins=20, data max=400,data min=0}]
+	table[y index=0] {data/hist_individuals.dat};
+	% \addplot[sharp plot,mark=square*,black]
+	% coordinates
+	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Histogramme du nombre de programme possédant chaque caractéristique\label{hist_individuals}}
+	\end{figure}
+	\end{center}
 
 \section{Différents algo}
+	\subsection{LogReg}
+		\begin{center}
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Score moyen},
+						xlabel={Proportion utilisée pour l'apprentissage}
+						],
+						\addplot table [x=train_size, y=mean, only marks] {data/logreg_l1_c05_trainsize.dat};
+						% \addplot[sharp plot,mark=square*,black]
+						% coordinates
+						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+					\end{axis}
+				\end{tikzpicture}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Ecart type du score},
+						xlabel={Proportion utilisée pour l'apprentissage}
+						],
+						\addplot table [x=train_size, y=std, only marks] {data/logreg_l1_c05_trainsize.dat};
+						% \addplot[sharp plot,mark=square*,black]
+						% coordinates
+						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Evolutions de la valeur moyenne et de l'écart type du score en fonction de la proportion de données utilisées pour l'apprentissage dans le cas de la régression logistique. L'évaluation est effectuée sur la partie complémentaire.\label{logreg_meanstd}}
+			\end{figure}
+		\end{center}
+
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.5\linewidth,
+				height=6cm,
+				ylabel={Moyenne du score},
+				xlabel={Coefficient de pénalisation L1 : C}
+				],
+				\addplot table [x=C, y=correct, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+				\addplot table [x=C, y=false, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+				\addplot table [x=C, y=missed, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+				% \addplot[sharp plot,mark=square*,black]
+				% coordinates
+				% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+			\end{axis}
+		\end{tikzpicture}
+
+
 	\subsection{SVM}
+
+		% \begin{figure}[h]
+		% 	\centering
+		% 	\begin{tikzpicture}
+		% 		\begin{axis}[
+		% 			xlabel={$Q_{\beta\beta}$ (\si{MeV})},
+		% 			ylabel style={align=center},
+		% 			ylabel={Events not depositing energy \\ in the considered medium (\si{\percent})},
+		% 			legend pos=north east,
+		% 			legend entries={fibers, buffer}]
+		% 			\addplot table [x=Qbb, y=percent, only marks] {increase.txt};
+		% 			\addplot table [x=Qbb, y=percent2, only marks] {increase.txt};
+		% 		\end{axis}
+		% 	\end{tikzpicture}
+		% 	\caption{Proportions of events not depositing energy in the fibers as a function of $Q_{\beta\beta}$ of the considered isotope. \label{figure:en_vs_qbb}}
+		% \end{figure}
+
 	\subsection{SVC}
 	\subsection{Classification avec kmeans}
+	\subsection{Arbres de décision}
 
 \section{Analyse des résultats}
 
