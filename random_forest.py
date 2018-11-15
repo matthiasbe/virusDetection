@@ -29,7 +29,6 @@ for t in range(2,11):
     for i in range(1,100):
         rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50, max_depth=5)
 
-        shuffled = sklearn.utils.shuffle(trainm[:,:-1])
         cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=t)
         results.append(np.average(cv_rf))
     

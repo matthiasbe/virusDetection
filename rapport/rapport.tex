@@ -254,6 +254,10 @@
 	\subsection{Arbre de décision}
 
 		\subsubsection{Arbre simple}
+			Comme premier classificateur on utilise un unique arbre de décision. On compare les deux méthodes de validation : tout d'abord le data-splitting et ensuite la validation croisée. Dans chaque cas on observe l'impact de la proportion des données d'entrainement sur la précision et la robustesse du modèle.
+
+			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour un mille rejeu du data-splitting. Chaque abscisse donne un proportion des données de test. On observe un minimum d'écart-type à l'abscisse $175$. Cela montre qu'on a un modèle robuste avec des données de test représentant environ 45\% de la population.
+
 			\begin{figure}
 				\begin{tikzpicture}
 					\begin{axis}[
@@ -276,6 +280,7 @@
 					\end{axis}
 				\end{tikzpicture}
 				\caption{Moyenne et Ecart-type pour 1000 data-splitting}
+				\label{data-splitting-dt}
 			\end{figure}
 			\begin{figure}
 				\begin{tikzpicture}
@@ -305,7 +310,6 @@
 					],
 					\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
 				\end{axis}
-				\caption{Moyenne pour 50 cross-validations}
 			\end{tikzpicture}
 
 
