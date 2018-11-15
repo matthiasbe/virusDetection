@@ -14,11 +14,42 @@ train = preprocessing.get_data(datafile, ftcount)
 trainm = preprocessing.mask_unused_features(train)
 
 
+x = []
+meany = []
 
-rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50)
+for t in range(2,11):
+    results = []
+        
+x = []
+meany = []
+sdy = []
 
-shuffled = sklearn.utils.shuffle(trainm[:,:-1])
-cv_rf = sklearn.model_selection.cross_val_score(rf, shuffled, trainm[:,-1], cv=8)
-print(np.average(cv_rf))
+for t in 2,3,4,5,6,7,8,10,15,20,30,40,50,60,70,80,90,100,120,150,180,200,250:
+    results = []
+    for i in range(1,30):
+        rf = sklearn.ensemble.RandomForestClassifier(n_estimators=50, max_depth=t)
 
+        cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=8)
+        results.append(np.average(cv_rf))
+    
+    x.append(t)
+    meany.append(np.mean(results))
+    sdy.append(np.std(results))
+    print(t)
+
+
+np.savetxt("results/random_forest_depth.txt",np.array([x,meany,sdy]).T);
+
+plt.subplot(121)
+plt.plot(x, meany)
+plt.title("Moyenne")
+
+plt.subplot(122)
+plt.plot(x, sdy)
+plt.title("Standard deviation")
+
+
+
+
+plt.show()
 
