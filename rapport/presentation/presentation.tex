@@ -84,15 +84,63 @@
 \end{frame}
 
 \begin{frame}{Random Forest - Validation croisée}
+
+	\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.7\linewidth,
+				height=6cm,
+				ylabel={Moyenne de précision},
+				xlabel={Nombre de parts},
+				ymin=0
+				],
+				\addplot table [x index=0, y index=1, only marks] {../data/random_forest.txt};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Impact du nombre de division (100 répétitions)}
+		\label{random_forest}
+	\end{center}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Random Forest - Impact du nombre d'arbres}
+	\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[
+				width=0.7\linewidth,
+				height=6cm,
+				ylabel={Moyenne de précision},
+				xlabel={Nombre d'estimateurs}
+				],
+				\addplot table [x index=0, y index=1, only marks] {../data/random_forest_estimators.txt};
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Impact du nombre d'estimateurs (100 répétitions)}
+		\label{rf_estimators}
+	\end{center}
+	\end{figure}
 \end{frame}
 
-\begin{frame}{Random Forest - Impact de la profondeur}
-\end{frame}
 
 \begin{frame}{Random Forest - Impact de la profondeur}
+	\begin{figure}
+		\begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					width=0.7\linewidth,
+					height=6cm,
+					ylabel={Moyenne de précision},
+					xlabel={Profondeur maximum d'arbre}
+					],
+					\addplot table [x index=0, y index=1, only marks] {../data/random_forest_depth.txt};
+				\end{axis}
+			\end{tikzpicture}
+			\caption{Impact de la profondeur maximale (100 répétitions)}
+			\label{rf_depth}
+		\end{center}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Analyse des résultats}
