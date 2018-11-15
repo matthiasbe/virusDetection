@@ -24,12 +24,12 @@ x = []
 meany = []
 sdy = []
 
-for t in range(2,11):
+for t in 2,3,4,5,6,7,8,10,15,20,30,40,50,60,70,80,90,100,120,150,180,200,250:
     results = []
-    for i in range(1,100):
-        rf = sklearn.ensemble.GradientBoostingClassifier()
+    for i in range(1,5):
+        rf = sklearn.ensemble.GradientBoostingClassifier(max_depth=t)
 
-        cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=t)
+        cv_rf = sklearn.model_selection.cross_val_score(rf, trainm[:,:-1], trainm[:,-1], cv=8)
         results.append(np.average(cv_rf))
     
     x.append(t)
@@ -38,7 +38,7 @@ for t in range(2,11):
     print(t)
 
 
-np.savetxt("results/gradiant_boosting.txt",np.array([x,meany,sdy]).T);
+np.savetxt("results/random_forest_depth.txt",np.array([x,meany,sdy]).T);
 
 plt.subplot(121)
 plt.plot(x, meany)

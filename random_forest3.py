@@ -13,11 +13,6 @@ train = preprocessing.get_data(datafile, ftcount)
 trainm = preprocessing.mask_unused_features(train)
 
 
-x = []
-meany = []
-
-for t in range(2,11):
-    results = []
         
 x = []
 meany = []
