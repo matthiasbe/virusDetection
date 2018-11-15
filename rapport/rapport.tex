@@ -370,7 +370,7 @@
 						width=0.5\linewidth,
 						height=6cm,
 						ylabel={Moyenne de précision},
-						xlabel={Profondeur maximum darbre}
+						xlabel={Profondeur maximum d'arbre}
 						],
 						\addplot table [x index=0, y index=1, only marks] {data/random_forest_depth.txt};
 					\end{axis}
@@ -378,6 +378,8 @@
 				\caption{Impact de la profondeur maximale}
 				\label{rf_depth}
 			\end{figure}
+
+			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effictivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
 
 \section{Analyse des résultats}
 
@@ -390,6 +392,7 @@
 		Régression logistique 	& \SI{87}{\percent} 	 &	\SI{11}{\percent}  	& \SI{2}{\percent} \\
 		Arbre de décision & \SI{79}{\percent} & \SI{17}{\percent} & \SI{4}{\percent} \\
 		Random forest & \SI{81}{\percent} & \SI{16}{\percent} & \SI{3}{\percent} \\
+		Random forest \\ avec élimination de caractéristiques& \SI{83}{\percent} & \SI{14}{\percent} & \SI{3}{\percent} \\
 		Gradient boosting & \SI{85}{\percent} & \SI{12}{\percent} & \SI{3}{\percent} \\
 		\bottomrule
 	\end{tabular}
