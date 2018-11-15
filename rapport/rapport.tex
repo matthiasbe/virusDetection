@@ -72,7 +72,10 @@
 
 \section{Présentation du jeu de données}
 	Nos données proviennent de la base de données UCI\cite{UCI}.
-	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de carctéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les carctéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
+	Cette base de données a été obtenue à partir de l'étude de 373 programmes informatiques malicieux et non-malicieux selon le processus expliqué dans un article de recherche en 2007 \cite{article}. Cet article développe une méthode permettant d'extraire des caractéristiques à partir d'exécutables malins et bénins afin d'effectuer par la suite une classification de ces exécutables permettant de les distinguer. Trois types de caractéristiques sont extraites : des n-uplets binaires, des n-uplets assembleur et des appels à des fonctions appartenant à des librairies extérieures. Les caractéristiques binaires sont extraites des exécutables binaires tandis que les caractéristique assembleur sont obtenues après désassemblage de l'exécutable. Les caractéristiques liées aux appels de fonctions sont extraites depuis l'entête du programme.
+
+\section{Objectifs}
+	Nous nous proposons dans ce projet d'utiliser le jeu de données précédemment décrit afin d'obtenir la meilleure classification possible entre les virus informatiques et les programmes bénins. Nous avons choisi d'utiliser le language Python et plus particulièrement son module Scikit-learn \cite{sklearn} durant ce projet.
 
 \section{Pré-traitement des données}
 	Nous avons commencé notre étude des données par quelques visualisations de notre jeu de données. Nous avons tout d'abord visualisé l'histogramme du nombre de caractéristiques possédé par les programmes du jeu de données représenté sur la figure \ref{hist_features}. On peut observer sur cet histogramme que la majorité des programmes possèdent une centaine de caractéristiques tandis qu'ils sont très peu à les posséder toutes ou bien à n'en avoir aucune. On peut en outre remarquer que la quasi totalité des virus possèdent un nombre de caractéristique situé entre 80 et 110 tandis qu'il existe des programmes bénins avec plus ou moins de caractéristiques. Cette observation pourra nous mener à tenter de restreindre certaines analyses futures aux programmes possédant entre 80 et 110 caractéristiques en supposant que les programmes bénins ne respectant pas ce critère peuvent être considérés comme des valeurs extrèmes.
@@ -169,18 +172,41 @@
 	On présente ici les deux techniques utilisées pour valider les modèles de classification.
 
 	\subsection{Data-splitting}		
-		La première technique de validation utilisée est la technique de data-splitting. On divise aléatoirement le jeu de données en deux, la première partie servant à entrainer le modèle. On utilise la deuxième partie des données pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
-		Cette technique produit des résultats très différent suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera souvent un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
+		La première technique de validation utilisée est la technique de data-splitting. On divise aléatoirement le jeu de données en deux. La première partie sert à entrainer le modèle tandis que la seconde est utilisée pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
+		Cette technique produit des résultats très différents suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera souvent un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
 
 	\subsection{Cross-validation}
 
-		La deuxième technique consiste à diviser le jeu de données en $n$ parties égales. On itère sur chaque partie de la façon suivant: les $n-1$ autres parties servent à entrainer le modèle et la partie courante est utilisée pour le valider. 
+		La deuxième technique consiste à diviser le jeu de données en $n$ parties égales. On itère sur chaque partie de la façon suivante: les $n-1$ autres parties servent à entrainer le modèle et la partie courante est utilisée pour le valider. 
 
 \section{Différents algo}
 	\subsection{Régression logistique}
 		La régression logistique permet facilement d'effectuer une régression binomiale sur des caractéristiques binaires afin d'obtenir une classification binaire d'où sa mise en oeuvre dans le problème qui nous occupe.
 
-		La régression logistique permet d'effectuer une pénalisation de type l1 ou l2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression.
+		La régression logistique permet d'effectuer une pénalisation de type L1 ou L2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression. Cette pénalisation peut se parametrer avec Scikit-Learn au travers d'un paramètre $C$ qui est l'inverse de la constante de régularisation. Ainsi on augmente la pénalisation lorsque l'on diminue $C$.
+
+		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
+
+		\begin{figure}
+			\begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					width=0.7\linewidth,
+					height=6cm,
+					ylabel={Moyenne du score},
+					xlabel={$C$ (L1)},
+					legend style={at={(0.95,0.7)}},
+					],
+					\addplot table [x=C, y=correct, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\addplot table [x=C, y=false, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\addplot table [x=C, y=missed, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\legend{Résultat correct, Faux positif, Faux négatif}
+				\end{axis}
+			\end{tikzpicture}
+			\caption{\'Evolution du score en fonction de l'importance de la pénalisation\label{fig:l1_C}}
+			\end{center}
+		\end{figure}
+
 		\begin{center}
 			\begin{figure}
 				\begin{tikzpicture}
@@ -212,22 +238,6 @@
 				\caption{Evolutions de la valeur moyenne et de l'écart type du score en fonction de la proportion de données utilisées pour l'apprentissage dans le cas de la régression logistique. L'évaluation est effectuée sur la partie complémentaire.\label{logreg_meanstd}}
 			\end{figure}
 		\end{center}
-
-		\begin{tikzpicture}
-			\begin{axis}[
-				width=0.5\linewidth,
-				height=6cm,
-				ylabel={Moyenne du score},
-				xlabel={Coefficient de pénalisation L1 : C}
-				],
-				\addplot table [x=C, y=correct, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
-				\addplot table [x=C, y=false, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
-				\addplot table [x=C, y=missed, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
-				% \addplot[sharp plot,mark=square*,black]
-				% coordinates
-				% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
-			\end{axis}
-		\end{tikzpicture}
 
 
 	\subsection{SVM}
@@ -305,7 +315,6 @@
 					],
 					\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
 				\end{axis}
-				\caption{Moyenne pour 50 cross-validations}
 			\end{tikzpicture}
 
 
