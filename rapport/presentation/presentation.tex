@@ -20,7 +20,7 @@
 \usepackage{wasysym}
 \usepackage{pgfplots}
 
-
+\pgfplotsset{compat=1.3}
 \DeclareSIUnit\year{yr}
 
 % Here's where the presentation starts, with the info for the title slide
@@ -81,10 +81,115 @@
 % These three lines create an automatically generated table of contents.
 
 
-\begin{frame}{Présentation du dataset}
+\begin{frame}{Présentation du dataset - Histogrammes}
+\begin{center}
+		\begin{figure}
+			\begin{tikzpicture}
+			\begin{axis}[
+			width=\linewidth,
+			height=5cm,
+			xmin=50,xmax=250,
+			ymin=0, ymax=300,
+			ybar interval=1,
+			ybar legend,
+			xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+			x tick label style= {rotate=90,anchor=east},
+			xlabel={Nombre de caractéristiques},
+			ylabel={Nombre de programmes}
+			],
+			\addplot+[hist={bins=20, data max=250,data min=50}, fill=black!50!white, draw=black]
+			table[y index=0] {../data/hist_features.dat};
+			\legend{Ensemble des programmes}
+			\end{axis}
+			\end{tikzpicture}
+
+			\caption{Histogramme du nombre de caractéristiques possédées par chaque programme\label{hist_features}}
+		\end{figure}
+	\end{center}
 \end{frame}
 
-\begin{frame}{Algorithme : Regression logistique}
+\begin{frame}{Présentation du dataset - Histogrammes}
+	\begin{center}
+	\begin{figure}
+	\begin{tikzpicture}
+	\begin{axis}[
+	width=\linewidth,
+	height=6cm,
+	xmin=0,xmax=400,
+	ymin=0, ymax=300,
+	ybar interval,
+	xticklabel={[\pgfmathprintnumber\tick;\pgfmathprintnumber\nexttick [},
+	x tick label style= {rotate=90,anchor=east},
+	ylabel={Nombre de caractéristiques},
+	xlabel={Nombre de programmes}
+	],
+	\addplot+[hist={bins=20, data max=400,data min=0}]
+	table[y index=0] {../data/hist_individuals.dat};
+	% \addplot[sharp plot,mark=square*,black]
+	% coordinates
+	% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Histogramme du nombre de programmes possédant chaque caractéristique\label{hist_individuals}}
+	\end{figure}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Régression logistique - data-splitting}
+	\begin{center}
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.45\linewidth,
+						height=6cm,
+						ylabel={Score moyen},
+						clip mode=individual,
+						],
+						\addplot table [x=train_size, y=mean, only marks] {../data/logreg_l1_c05_trainsize.dat};
+						\addplot[samples=100, no markers, domain=0.1:0.99, style=thick, color=red]{x^0.09162945*exp(-0.12192647)};
+						% \addplot[sharp plot,mark=square*,black]
+						% coordinates
+						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+					\end{axis}
+				\end{tikzpicture}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.45\linewidth,
+						height=6cm,
+						ylabel={Ecart type du score},
+						],
+						\addplot table [x=train_size, y=std, only marks] {../data/logreg_l1_c05_trainsize.dat};
+						% \addplot[sharp plot,mark=square*,black]
+						% coordinates
+						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
+					\end{axis}
+				\end{tikzpicture}
+				Proportion utilisée pour l'apprentissage
+				\caption{Evolutions de la valeur moyenne et de l'écart type du score en fonction de la proportion de données utilisées pour l'apprentissage dans le cas de la régression logistique. L'évaluation est effectuée sur la partie complémentaire.\label{logreg_meanstd}}
+			\end{figure}
+		\end{center}
+\end{frame}
+
+\begin{frame}{Regression logistique - choix de la pénalisation}
+	\begin{figure}
+			\begin{center}
+			\begin{tikzpicture}
+				\begin{axis}[
+					width=\linewidth,
+					height=6cm,
+					ylabel={Moyenne du score},
+					xlabel={$C$ (L1)},
+					legend style={at={(0.95,0.7)}},
+					],
+					\addplot table [x=C, y=correct, only marks] {../data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\addplot table [x=C, y=false, only marks] {../data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\addplot table [x=C, y=missed, only marks] {../data/evaluation_dump_LogReg_T95_l1_N100.dat};
+					\legend{Résultat correct, Faux négatif, Faux positif}
+				\end{axis}
+			\end{tikzpicture}
+			\caption{\'Evolution du score en fonction de l'importance de la pénalisation\label{fig:l1_C}}
+			\end{center}
+		\end{figure}
 \end{frame}
 
 \begin{frame}{Arbre de décision - data-splitting}
@@ -214,6 +319,24 @@
 \end{frame}
 
 \begin{frame}{Analyse des résultats}
+\begin{table}
+	\small
+	\begin{center}
+	\begin{tabular}{cccc}
+		\toprule
+		Méthode  &	Score  &	Faux positifs  &	Faux négatifs \\
+		\midrule
+		Régression logistique 	& \SI{87}{\percent} 	 &	\SI{11}{\percent}  	& \SI{2}{\percent} \\
+		Arbre de décision & \SI{79}{\percent} & \SI{17}{\percent} & \SI{4}{\percent} \\
+		Random forest & \SI{81}{\percent} & \SI{16}{\percent} & \SI{3}{\percent} \\
+		Random forest \\ avec élimination de caractéristiques& \SI{83}{\percent} & \SI{14}{\percent} & \SI{3}{\percent} \\
+		Gradient boosting & \SI{85}{\percent} & \SI{12}{\percent} & \SI{3}{\percent} \\
+		\bottomrule
+	\end{tabular}
+	\caption{Résumé des résultats obtenus \label{table:results}}
+	\end{center}
+\end{table}
+
 \end{frame}
 
 \begin{frame}{Conclusion}
