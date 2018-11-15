@@ -383,7 +383,7 @@
 				\label{rf_depth}
 			\end{figure}
 
-			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effictivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
+			On peut finalement tenter d'apliquer l'algorithme de Random Forest en éliminant les caractéristiques faiblement représentatives c'est à dire celle possédées par plus de 240 individus. On s'attend à ce que cette élimination soit particulièrement profitable aux algorithmes d'arbre de décision et cela semble être effectivement le cas. En effet le taux de réussite augmente de 3 points pour s'établir à \SI{83}{\percent} lorsque que l'on effectue cette coupure.
 
 		\subsubsection{Gradient Boosting}
 
@@ -423,10 +423,14 @@
 \end{table}
 
 \section{Pour aller plus loin...}
-cumuler n estimateurs
+	Afin d'obtenir de meilleurs résultats, il existe encore de nombreuses voies à explorer. On pourrait tout d'abord étudier plus précisément le gradient boosting pour améliorer les résultats au maximum. On pourrait en outre tenter d'affiner notre méthode de réduction de caractéristiques car la version actuelle, bien qu'améliorant nos résultats, reste très simpliste.
+
+	Finalement, il serait possible d'utiliser plusieurs estimateurs différents afin de combiner les algorithmes en effectuant des votes à la majorité. On s'attend à pouvoir augmenter nos performances en utilisant une telle technique.
+
+	Notons qu'une des améliorations les plus efficaces serait sans aucun doute d'élargir le jeu de données actuel car la population proposée actuellement est très réduite, elle possède même moins d'individus qu'il n'y a de caractéristiques.
 
 \section{Conclusion}
-	gradient boosting + random forest : des temps de calcul très très long
+	Il faut noter que les algorithmes basés sur les arbres de décision tels que le gradient boosting ou le random forest sont relativement lents et demandent des temps de calcul relativement long d'où la complexité de leur étude précise.
 
 \bibliographystyle{unsrt}
 \bibliography{synopsis.bib}

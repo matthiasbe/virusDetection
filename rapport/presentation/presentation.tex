@@ -1,13 +1,9 @@
-\documentclass[9.5pt]{beamer}
-
-\mode<presentation>
-{
-  \usetheme{Madrid}       % or try default, Darmstadt, Warsaw, ...
-  \usecolortheme{default} % or try albatross, beaver, crane, ...
-  \usefonttheme{serif}    % or try default, structurebold, ...
-  \setbeamertemplate{navigation symbols}{}
-  \setbeamertemplate{caption}[numbered]
-} 
+\documentclass{beamer}
+\useinnertheme{rectangles}
+\usecolortheme{orchid}
+\newenvironment{proenv}{\only{\setbeamercolor{local structure}{fg=green}}}{}
+\newenvironment{conenv}{\only{\setbeamercolor{local structure}{fg=red}}}{}
+\addtobeamertemplate{footline}{\textcolor{blue}{\small\insertframenumber/\inserttotalframenumber}}
 
 \usepackage[utf8]{inputenc} % accents 8 bits dans le fichier
 \usepackage[T1]{fontenc}      % accents codés dans la fonte
@@ -27,10 +23,48 @@
 \DeclareSIUnit\year{yr}
 
 % Here's where the presentation starts, with the info for the title slide
+
+\beamertemplatenavigationsymbolsempty
+\makeatletter
+\newcommand\titlegraphicii[1]{\def\inserttitlegraphicii{#1}}
+\titlegraphicii{}
+\setbeamertemplate{title page}
+{
+  \vbox{}
+   {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\hfill\inserttitlegraphicii\par}
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center]{title}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}%\vskip0.5em
+    \begin{beamercolorbox}[sep=8pt,center]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+  \end{centering}
+  %\vfill
+}
+\makeatother
+
 \title[Détection de virus informatique]{Classifications de programmes malicieux et non-malicieux\\ à partir de propriétés binaires}
 \author{Matthias \bsc{Beaupère}, Pierre \bsc{Granger}}
-\institute{M2 CHPS}
 \date{\today}
+
+\subtitle{Projet DA -- M2 CHPS}
+\date{\today}
+% \titlegraphic{\includegraphics[height=1.7cm, keepaspectratio]{img/ens.jpg}}
+% \titlegraphicii{\includegraphics[height=1.7cm, keepaspectratio]{img/uppsala.pdf}}
+
 
 \begin{document}
 \setbeamercolor{captioncolor}{fg=white,bg=red!80!white}
