@@ -24,3 +24,10 @@ def mask_unused_features(data):
 	mask[:, empty_columns] = 0
 	data_masked = np.ma.masked_array(data, mask)
 	return data_masked
+
+def remove_features(data):
+	#removes over-represented features
+	return data.T[data.sum(axis=0) < 240].T
+def remove_data(data):
+	#removes examples with too much features
+	return data[data.sum(axis=1) < 110]
