@@ -266,7 +266,7 @@
 		\subsubsection{Arbre simple}
 			Comme premier classificateur on utilise un unique arbre de décision. On compare les deux méthodes de validation : tout d'abord le data-splitting et ensuite la validation croisée. Dans chaque cas on observe l'impact de la proportion des données d'entrainement sur la précision et la robustesse du modèle.
 
-			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour un mille rejeu du data-splitting. Chaque abscisse donne un proportion des données de test. On observe un minimum d'écart-type à l'abscisse $175$. Cela montre qu'on a un modèle robuste avec des données de test représentant environ 45\% de la population.
+			La figure \ref{data-splitting-dt} nous donne l'évolution de la précision moyenne et de l'écart-type obtenu pour mille rejeu du data-splitting. Chaque abscisse donne un proportion des données de test. On observe un minimum d'écart-type à l'abscisse $175$. Cela montre que le modèle le plus robuste correspond à des données de test représentant environ 45\% de la population.
 
 			\begin{figure}
 				\begin{tikzpicture}
@@ -292,6 +292,10 @@
 				\caption{Moyenne et Ecart-type pour 1000 data-splitting}
 				\label{data-splitting-dt}
 			\end{figure}
+
+			La figure \ref{cv_dt} représente précision du modèle avec un validation par cross-validation. Nous avons rejoué 100 fois le scénario pour obtenir une moyenne. Nous n'avons pas représenté l'écart-type ici car il est trop faible pour avoir une signification. L'abscisse de cette figure indique le nombre de divisions de la validation croisée.
+			On en déduit qu'entre 4 et 10 divisions la précision change peu. De plus un nombre de 7 division semble être la valeur optimale.
+
 			\begin{figure}
 				\begin{tikzpicture}
 					\begin{axis}[
@@ -304,24 +308,68 @@
 						\addplot table [x index=0, y index=1, only marks] {data/decision_tree_cv.txt};
 					\end{axis}
 				\end{tikzpicture}
-				\caption{Moyenne pour 1000 cross-validations}
+				\caption{Moyenne pour 100 cross-validations}
+				\label{cv_dt}
 			\end{figure}
 
 
 		\subsubsection{Random forest}
-			
-			\begin{tikzpicture}
-				\begin{axis}[
-					width=0.5\linewidth,
-					height=6cm,
-					ylabel={Moyenne de précision},
-					xlabel={Nombre de parts},
-					ymin=0
-					],
-					\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
-				\end{axis}
-			\end{tikzpicture}
+		
+			Le deuxième classificateur est le Random Forest. Il s'agit d'un ensemble d'arbres construits aléatoirement et pondérés en fonction de leur résultat. Pour ce classificateur on utilisera uniquement la validation par validation croisée.
 
+			Le résultat de la première étude est présenté figure \ref{random_forest}. Il s'agit de regarder l'influence du nombre de découpage sur la précision. On observe une tendance similaire à celle vu dans la figure \ref{cv_dt}, avec néammoins une amplitude atténuée. On en déduit que l'on peut choisir entre 4 et 10 divisions sans grand impact.
+
+
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Moyenne de précision},
+						xlabel={Nombre de parts},
+						ymin=0
+						],
+						\addplot table [x index=0, y index=1, only marks] {data/random_forest.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Impact du nombre de division}
+				\label{random_forest}
+			\end{figure}
+
+			La seconde étude consiste à observer l'influence du nombre d'arbres sur la précision. Les résultats sont présentés figure \ref{rf_estimators}. On observe que si on choisit un nombre trop faible d'estimateurs, la précision se dégrade très rapidement. En outre on remarque qu'a partir de 50 estimateurs la précision reste constante, il serait donc inutile de choisir un nombre d'estimateurs supérieur à 50 car cela reviendrait à consommer de la puissance de calcul inutilement.
+
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Moyenne de précision},
+						xlabel={estimators}
+						],
+						\addplot table [x index=0, y index=1, only marks] {data/random_forest_estimators.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Impact du nombre d'estimateurs}
+				\label{rf_estimators}
+			\end{figure}
+
+
+			La troisième et dernière étude du Random Forest présente l'impact de la profondeur des arbres sur la précision de l'algorithme. On peut observer sur la figure \ref{rf_depth} les résultats obtenus. On retrouve la même tendance que dans l'étude précédente à propos du nombre d'arbre : si on diminue la profondeur, la précision se dégrade. Par ailleurs la précision stagne pour une profondeur supérieur à 20.
+
+			\begin{figure}
+				\begin{tikzpicture}
+					\begin{axis}[
+						width=0.5\linewidth,
+						height=6cm,
+						ylabel={Moyenne de précision},
+						xlabel={Profondeur maximum darbre}
+						],
+						\addplot table [x index=0, y index=1, only marks] {data/random_forest_depth.txt};
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Impact de la profondeur maximale}
+				\label{rf_depth}
+			\end{figure}
 
 \section{Analyse des résultats}
 
