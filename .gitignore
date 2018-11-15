@@ -3,3 +3,4 @@ rapport/*
 !rapport/data
 .vscode
 *.swp
+!rapport/presentation/presentation.tex
