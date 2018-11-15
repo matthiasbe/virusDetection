@@ -185,7 +185,13 @@
 
 		La régression logistique permet d'effectuer une pénalisation de type L1 ou L2 afin de limiter le nombre de caractéristiques significatives dans le calcul de la régression. Cette pénalisation peut se parametrer avec Scikit-Learn au travers d'un paramètre $C$ qui est l'inverse de la constante de régularisation. Ainsi on augmente la pénalisation lorsque l'on diminue $C$.
 
-		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
+		On commence par étudier quelle valeur de $C$ permet d'obtenir les meilleurs résultats. On peut voir représenté sur la figure \ref{fig:l1_C} l'impact de la valeur de $C$ sur le score obtenu dans le cas de la pénalisation L1. On peut observer que la valeur optimale se situe aux alentours de $C=0.4$. En effet, pour une valeur inférieure, la constante de régularisation devient trop importantes et trop de caractéristiques sont éliminées d'où une chute du score. Pour $C>0.4$, on observe une légère pente descendante car l'impact de la pénalisation devient alors très faible. Le taux de faux-négatifs commence alors à très légèrement augmenter. Il semble qu'aucune valeur spécifique permette d'optimiser le nombre de faux-négatifs par rapport aux faux-positifs. Nous avons aussi testé la pénalisation L2 mais elle offrait des résultats légèrement inférieurs. On choisit donc pour la suite la pénalisation L1 et $C=0.4$.
+
+		Dans un second temps, on peut tenter d'optimiser la proportion à utiliser entre les données d'entrainement de test afin d'obtenir les meilleurs résultats. On peut observer sur la figure \ref{logreg_meanstd} les tracés de la valeur moyenne et de l'écart-type du score obtenus après 500 répétitions aléatoires. Le score moyen augmente en suivant une loi de puissance de paramètre $0.09$ lorsque la quantité de données d'entrainement augmente. Néanmoins l'écart-type commence à exploser lorsque la proportion des données d'entrainement dépasse $0.8$ ce qui est attendu car alors la quantité d'exemples de test devient très faible. Le choix le plus judicieux du paramètre de proportion semble alors être $0.8$ ce qui permet d'atteindre une précision moyenne de $\SI{87}{\percent}$.
+
+		Lorsque l'on tente de restreindre le nombre de programmes à étudier en ne sélectionnant que ceux avec un nombre de caractéristiques entre 80 et 110, la précision moyenne chute à $\SI{84}{\percent}$. Il est propable que cette restriction ne soit pas judicieuse car on ne possède déjà qu'une population de très petite taille devant le nombre de caractéristiques. Néanmoins lorsque l'on élimine toutes les caractéristiques faiblement représentatives c'est à dire celles possédées par plus de 240 individus, on obtient des résultats tout aussi bon qu'en les laissant. Ainsi, il peut être judicieux de ne pas tenir compte de ces caractéristiques.
+
+
 
 		\begin{figure}
 			\begin{center}
@@ -200,7 +206,7 @@
 					\addplot table [x=C, y=correct, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
 					\addplot table [x=C, y=false, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
 					\addplot table [x=C, y=missed, only marks] {data/evaluation_dump_LogReg_T95_l1_N100.dat};
-					\legend{Résultat correct, Faux positif, Faux négatif}
+					\legend{Résultat correct, Faux négatif, Faux positif}
 				\end{axis}
 			\end{tikzpicture}
 			\caption{\'Evolution du score en fonction de l'importance de la pénalisation\label{fig:l1_C}}
@@ -398,6 +404,22 @@
 				\end{center}
 			\end{figure}
 \section{Analyse des résultats}
+
+	\begin{table}
+	\begin{center}
+	\begin{tabular}{cccc}
+		\toprule
+		Méthode  &	Score  &	Faux positifs  &	Faux négatifs \\
+		\midrule
+		Régression logistique 	& \SI{87}{\percent} 	 &	\SI{11}{\percent}  	& \SI{2}{\percent} \\
+		Arbre de décision & \SI{79}{\percent} & \SI{17}{\percent} & \SI{4}{\percent} \\
+		Random forest & \SI{81}{\percent} & \SI{16}{\percent} & \SI{3}{\percent} \\
+		Gradient boosting & \SI{85}{\percent} & \SI{12}{\percent} & \SI{3}{\percent} \\
+		\bottomrule
+	\end{tabular}
+	\caption{Résumé des résultats obtenus \label{table:results}}
+	\end{center}
+\end{table}
 
 \section{Pour aller plus loin...}
 cumuler n estimateurs
