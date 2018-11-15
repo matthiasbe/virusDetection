@@ -75,13 +75,33 @@
 
 \section{Pré-traitement des données}
 
+\section{Techniques de validation}
+
+	On présente ici les deux techniques utilisées pour valider les modèles de classification.
+
+	\subsection{Data-splitting}		
+		La première technique de validation utilisé est la technique de data-splitting. On divise le jeu de données en deux aléatoirement, la première partie servant à entrainer le modèle. On utilise la deuxième partie des données pour valider le modèle en comparant les prédictions du modèle et les valeurs réelles.
+		Cette technique produit des résultats très différent suivant la répartition des données dans les deux jeux. C'est pourquoi on rejouera souvent un grand nombre de fois le data-splitting et on observera la moyenne et l'écart-type pour connaitre la robustesse de la validation.
+
+	\subsection{Cross-validation}
+
+		La deuxième technique consiste à diviser le jeu de données en $n$ parties égales. On itère sur chaque partie de la façon suivant: les $n-1$ autres parties servent à entrainer le modèle et la partie courante est utilisée pour le valider. 
+
 \section{Différents algo}
 	\subsection{SVM}
 	\subsection{SVC}
 	\subsection{Classification avec kmeans}
 	\subsection{Arbre de décision}
-		\subsubsection{Arbre unique}
-		\subsubsection{Forêt}
+
+		\subsubsection{Data-splitting}
+
+
+
+
+		\subsubsection{Validation croisée}		
+
+
+		\subsubsection{Random forest}
 
 \section{Analyse des résultats}
 
