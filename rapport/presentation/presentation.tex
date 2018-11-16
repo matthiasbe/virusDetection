@@ -147,6 +147,7 @@
 						],
 						\addplot table [x=train_size, y=mean, only marks] {../data/logreg_l1_c05_trainsize.dat};
 						\addplot[samples=100, no markers, domain=0.1:0.99, style=thick, color=red]{x^0.09162945*exp(-0.12192647)};
+						\addplot[mark=none, style=thick, color=green] coordinates {(0.8,0.7) (0.8,0.9)};
 						% \addplot[sharp plot,mark=square*,black]
 						% coordinates
 						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
@@ -159,6 +160,7 @@
 						ylabel={Ecart type du score},
 						],
 						\addplot table [x=train_size, y=std, only marks] {../data/logreg_l1_c05_trainsize.dat};
+						\addplot[mark=none, style=thick, color=green] coordinates {(0.8,0) (0.8,0.15)};
 						% \addplot[sharp plot,mark=square*,black]
 						% coordinates
 						% {(-1.5,0) (1.5,3) (4.5,4) (7.5,2) (10.5,6) (13.5,0)};
@@ -340,6 +342,21 @@
 \end{frame}
 
 \begin{frame}{Conclusion}
+	\begin{block}{Pour aller plus loin}
+		\begin{itemize}
+			\item \'Etudier plus précisément le gradient-boosting
+			\item Optimiser l'élimination de caractéristiques
+			\item Combiner différents estimateurs
+		\end{itemize}
+	\end{block}
+
+	\begin{alertblock}{Conclusion}
+		\begin{itemize}
+			\item Régresion logistique la plus efficace
+			\item Arbre de décision très chronophage
+			\item Jeu de données peut-être biaisé ?
+		\end{itemize}
+	\end{alertblock}
 \end{frame}
 
 
