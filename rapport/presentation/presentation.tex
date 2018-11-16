@@ -80,9 +80,20 @@
 
 % These three lines create an automatically generated table of contents.
 
+\begin{frame}{Contexte du dataset}
+	\begin{itemize}
+		\item Population : ensemble de programmes
+		\item 373 programmes : 28\% virus
+		\item 531 charactéristiques
+			\begin{itemize}
+				\item 1 - 500 : Suite d'octets présents à l'exécution et dans le binaire ($n-gram$)
+				\item 501 - 31 : Appels à des librairies externes
+			\end{itemize}
+	\end{itemize}
+\end{frame}
 
 \begin{frame}{Présentation du dataset - Histogrammes}
-\begin{center}
+	\begin{center}
 		\begin{figure}
 			\begin{tikzpicture}
 			\begin{axis}[
